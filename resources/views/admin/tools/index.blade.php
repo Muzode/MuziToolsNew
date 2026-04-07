@@ -9,8 +9,8 @@
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-striped align-middle">
-                    <thead class="table-dark">
+                <table class="table table-bordered table-transparent table-striped align-middle">
+                    <thead class="">
                         <tr>
                             <th width="5%">No</th>
                             <th width="15%">Gambar</th>

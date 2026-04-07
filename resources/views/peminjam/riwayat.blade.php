@@ -3,7 +3,7 @@
     <h3>Riwayat Peminjaman Saya</h3>
     <div class="card mt-3">
         <div class="card-body">
-            <table class="table">
+            <table class="table table-transparent">
                 <thead>
                     <tr>
                         <th>Alat</th>

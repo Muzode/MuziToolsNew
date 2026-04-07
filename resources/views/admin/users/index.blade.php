@@ -15,8 +15,8 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <table class="table table-bordered table-striped align-middle">
-                <thead class="table-dark">
+            <table class="table table-bordered table-transparent table-striped align-middle">
+                <thead class="">
                     <tr>
                         <th width="5%">No</th>
                         <th>Nama Lengkap</th>

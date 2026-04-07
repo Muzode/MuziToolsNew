@@ -9,8 +9,7 @@
                         @csrf
                         <div class="mb-3">
                             <label>Nama Lengkap</label>
-                            <input type="text" name="name" class="form-control @error('name') is-invalid 
-@enderror"
+                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
                                 value="{{ old('name') }}" required>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>

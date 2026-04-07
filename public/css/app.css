@@ -1,0 +1,113 @@
+/* resources/css/app.css */
+
+/* Custom Color Variables - Kompatibel Bootstrap */
+:root {
+    /* Custom Colors - Prefix 'custom-' untuk hindari konflik Bootstrap */
+    --custom-color-1: #0f6a6f; /* teal gelap */
+    --custom-color-2: #79afc6; /* biru pastel */
+    --custom-color-3: #d8b519; /* kuning lembut */
+    --custom-color-4: #d89371; /* oranye hangat */
+    --custom-color-5: #c06e76; /* merah coral */
+
+    /* Tambahan untuk konsistensi Bootstrap */
+    --custom-color-1-50: #e8f5f6;
+    --custom-color-1-100: #b2d9dc;
+    --custom-color-1-500: #0f6a6f;
+    --custom-color-1-900: #0a4649;
+}
+
+/* Utility Classes - Prefix 'custom-' */
+.bg-primary {
+    background-color: var(--custom-color-1) !important;
+}
+.bg-secondary,
+.bg-info {
+    background-color: var(--custom-color-2) !important;
+}
+.bg-success {
+    background-color: var(--custom-color-3) !important;
+}
+.bg-warning {
+    background-color: var(--custom-color-4) !important;
+}
+.bg-danger {
+    background-color: var(--custom-color-5) !important;
+}
+
+.btn-primary {
+    background-color: var(--custom-color-1) !important;
+    border: none;
+}
+.btn-secondary,
+.btn-info {
+    background-color: var(--custom-color-2) !important;
+    border: none;
+}
+.btn-success {
+    background-color: var(--custom-color-3) !important;
+    border: none;
+}
+.btn-warning {
+    background-color: var(--custom-color-4) !important;
+    border: none;
+}
+.btn-danger {
+    background-color: var(--custom-color-5) !important;
+    border: none;
+}
+
+.bg-animasi {
+    background: linear-gradient(270deg, #1bb0b8, #b2d9dc);
+    background-size: 400% 400%;
+    animation: gradientMove 8s ease infinite;
+    height: 100vh;
+}
+
+/* animasi gerak gradasi */
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+.card {
+    backdrop-filter: blur(5px);
+    background-color: var(--custom-color-1-100);
+    
+}
+.navbar .nav-link:focus,
+.navbar .nav-link:active {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem var(--custom-color-1-100); /* hijau */
+    border-radius: 0.5rem; /* rounded */
+}
+/* Tabel transparan */
+.table-transparent {
+    background-color: transparent !important; /* tabel utama tetap transparan */
+    color: #ffffff !important; /* teks dark */
+}
+
+/* Header tabel */
+.table-transparent thead,
+.table-transparent thead th {
+    background-color: rgba(255, 255, 255, 0.226) !important; /* header transparan */
+    color: #212529 !important; /* teks dark */
+}
+
+/* Body tabel */
+.table-transparent tbody,
+.table-transparent tbody tr,
+.table-transparent tbody td {
+    background-color: rgba(255, 255, 255, 0.226) !important; /* baris transparan */
+    color: #212529 !important; /* teks dark */
+}
+
+/* Hover baris (opsional) */
+.table-transparent tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05) !important; /* hover soft abu-abu */
+}

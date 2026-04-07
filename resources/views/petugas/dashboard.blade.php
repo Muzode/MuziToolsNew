@@ -5,7 +5,7 @@
     <div class="card mb-4">
         <div class="card-header bg-warning">Menunggu Persetujuan</div>
         <div class="card-body">
-            <table class="table">
+            <table class="table table-transparent">
                 <thead>
                     <tr>
                         <th>Peminjam</th>
@@ -43,7 +43,7 @@
     <div class="card">
         <div class="card-header bg-info text-white">Monitor Peminjaman</div>
         <div class="card-body">
-            <table class="table">
+            <table class="table table-transparent">
                 <thead>
                     <tr>
                         <th>Peminjam</th>
@@ -74,7 +74,7 @@
     <div class="card">
         <div class="card-header bg-info text-white">Monitor Peminjaman</div>
         <div class="card-body">
-            <table class="table">
+            <table class="table table-transparent">
                 <thead>
                     <tr>
                         <th>Peminjam</th>

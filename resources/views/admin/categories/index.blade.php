@@ -10,8 +10,8 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <table class="table table-bordered table-striped">
-                        <thead class="table-dark">
+                    <table class="table table-bordered table-transparent table-striped">
+                        <thead class="">
                             <tr>
                                 <th width="10%">No</th>
                                 <th>Nama Kategori</th>
