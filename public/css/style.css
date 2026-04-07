@@ -1,0 +1,23 @@
+:root {
+  --color-1: #0F6A6F; /* teal gelap */
+  --color-2: #79AFC6; /* biru pastel */
+  --color-3: #F0D86A; /* kuning lembut */
+  --color-4: #F47F45; /* oranye hangat */
+  --color-5: #C23D4A; /* merah coral */
+}
+
+bg-1 {
+  background-color: var(--color-1) !important;
+}
+bg-2 {
+  background-color: var(--color-2) !important;
+}
+bg-3 {
+  background-color: var(--color-3) !important;
+}
+bg-4 {
+  background-color: var(--color-4) !important;
+}
+bg-5 {
+  background-color: var(--color-5) !important;
+}
