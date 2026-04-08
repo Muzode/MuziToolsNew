@@ -9,3 +9,28 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+body, html {
+      margin: 0;
+      height: 100%;
+    }
+
+    .fullscreen-gradient {
+      width: 100%;
+      height: 100vh; /* penuh layar */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 3rem;
+      color: #000;
+
+      /* Background gradasi animasi */
+      background: linear-gradient(270deg, #ffffff, #b8dfdf, #ffffff);
+      background-size: 600% 600%;
+      animation: gradientAnim 10s ease infinite;
+    }
+
+    @keyframes gradientAnim {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
