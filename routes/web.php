@@ -12,6 +12,8 @@ use App\Http\Controllers\ToolController;
 use App\Http\Controllers\UserController;
 use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\RegisterController;
+
 // Login & Logout (Semua Role)
 Route::get('/', function () {
     // Jika user sudah login, redirect ke dashboard sesuai role
@@ -54,3 +56,5 @@ Route::middleware(['auth', 'role:peminjam'])->group(function () {
     Route::post('/peminjam/ajukan', [PeminjamController::class, 'store']); // Mengajukan
     Route::get('/peminjam/riwayat', [PeminjamController::class, 'history']); // Riwayat & Kembalikan
 });
+Route::get('/register', [RegisterController::class, 'index'])->name('register');
+Route::post('/register', [RegisterController::class, 'store'])->name('register.store');

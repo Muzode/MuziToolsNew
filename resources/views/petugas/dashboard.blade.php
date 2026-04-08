@@ -25,7 +25,7 @@
                             <td>
                                 <form action="{{ url('/petugas/approve/' . $loan->id) }}" method="POST" class="d￾inline">
                                     @csrf
-                                    <button class="btn btn-success btn-sm">Setujui</button>
+                                    <button class="btn btn-primary btn-sm">Setujui</button>
                                 </form>
                                 <button class="btn btn-danger btn-sm">Tolak</button>
                             </td>

@@ -37,6 +37,7 @@
 .btn-primary {
     background-color: var(--custom-color-1) !important;
     border: none;
+    color: white;
 }
 .btn-secondary,
 .btn-info {
@@ -50,10 +51,12 @@
 .btn-warning {
     background-color: var(--custom-color-4) !important;
     border: none;
+    color: white !important;
 }
 .btn-danger {
     background-color: var(--custom-color-5) !important;
     border: none;
+    color: white !important;
 }
 
 .bg-animasi {
@@ -78,7 +81,6 @@
 .card {
     backdrop-filter: blur(5px);
     background-color: var(--custom-color-1-100);
-    
 }
 .navbar .nav-link:focus,
 .navbar .nav-link:active {
@@ -95,7 +97,12 @@
 /* Header tabel */
 .table-transparent thead,
 .table-transparent thead th {
-    background-color: rgba(255, 255, 255, 0.226) !important; /* header transparan */
+    background-color: rgba(
+        255,
+        255,
+        255,
+        0.226
+    ) !important; /* header transparan */
     color: #212529 !important; /* teks dark */
 }
 
@@ -103,7 +110,12 @@
 .table-transparent tbody,
 .table-transparent tbody tr,
 .table-transparent tbody td {
-    background-color: rgba(255, 255, 255, 0.226) !important; /* baris transparan */
+    background-color: rgba(
+        255,
+        255,
+        255,
+        0.226
+    ) !important; /* baris transparan */
     color: #212529 !important; /* teks dark */
 }
 

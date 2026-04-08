@@ -16,6 +16,7 @@
                         <th>Alat</th>
                         <th>Tgl Pinjam</th>
                         <th>Tgl Kembali (Aktual)</th>
+                        <th>Denda</th>
                         <th>Petugas</th>
                         <th>Aksi</th>
                     </tr>
@@ -35,9 +36,10 @@
                                     <span class="badge bg-success">Tepat Waktu</span>
                                 @endif
                             </td>
+                            <td>{{ number_format($r->denda, 0, ',', '.') }}</td>
                             <td>{{ $r->petugas ? $r->petugas->name : 'Admin' }}</td>
                             <td>
-                                <a href="{{ route('admin.returns.edit', $r->id) }}" class="btn btn-warning btnsm">Edit</a>
+                                <a href="{{ route('admin.returns.edit', $r->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                 <form action="{{ route('admin.returns.destroy', $r->id) }}" method="POST" class="d-inline"
                                     onsubmit="return confirm('Hapus riwayat ini?');">
                                     @csrf

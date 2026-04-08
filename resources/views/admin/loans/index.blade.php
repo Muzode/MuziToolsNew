@@ -29,7 +29,7 @@
                             </td>
                             <td>
                                 @if ($loan->status == 'pending')
-                                    <span class="badge bg-warning textdark">Pending</span>
+                                    <span class="badge bg-warning text-dark">Pending</span>
                                 @elseif($loan->status == 'disetujui')
                                     <span class="badge bg-primary">Sedang Dipinjam</span>
                                 @elseif($loan->status == 'kembali')

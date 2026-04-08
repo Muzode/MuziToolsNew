@@ -16,7 +16,7 @@
                                 <input type="hidden" name="tool_id" value="{{ $tool->id }}">
                                 <div class="mb-2">
                                     <label class="small">Tgl Rencana Kembali</label>
-                                    <input type="date" name="tanggal_kembali" class="form-control form-controlsm"
+                                    <input type="date" name="tanggal_kembali" class="form-control form-control-sm"
                                         required min="{{ date('Y-m-d') }}">
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100">Pinjam Alat</button>

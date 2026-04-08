@@ -21,6 +21,7 @@ return new class extends Migration
             // Status: pending, disetujui, ditolak, kembali
             $table->enum('status', ['pending', 'disetujui', 'ditolak', 'kembali'])->default('pending');
             $table->foreignId('petugas_id')->nullable()->constrained('users'); // Siapa yang menyetujui
+            $table->integer('denda_per_hari')->default(5000); // misal 5000 per hari
             $table->timestamps();
         });
     }

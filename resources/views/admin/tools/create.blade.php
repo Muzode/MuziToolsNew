@@ -6,7 +6,7 @@
                 <div class="card">
                     <div class="card-header fw-bold">Tambah Alat Baru</div>
                     <div class="card-body">
-                        <form action="{{ route('tools.store') }}" method="POST" enctype="multipart/form￾data">
+                        <form action="{{ route('tools.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
                                 <label class="form-label">Nama Alat</label>
@@ -19,7 +19,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Kategori</label>
-                                <select name="category_id" class="form-select @error('category_id') is￾invalid @enderror"
+                                <select name="category_id" class="form-select @error('category_id') is-invalid @enderror"
                                     required>
                                     <option value="">-- Pilih Kategori --</option>
                                     @foreach ($categories as $cat)
@@ -37,7 +37,7 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Jumlah Stok</label>
                                     <input type="number" name="stok"
-                                        class="form-control @error('stok') isinvalid @enderror"
+                                        class="form-control @error('stok') is-invalid @enderror"
                                         value="{{ old('stok', 1) }}" min="0" required>
                                     @error('stok')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -46,7 +46,7 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Gambar Alat (Opsional)</label>
                                     <input type="file" name="gambar"
-                                        class="form-control @error('gambar') isinvalid @enderror" accept="image/*">
+                                        class="form-control @error('gambar') is-invalid @enderror" accept="image/*">
                                     <small class="text-muted">Format: JPG, PNG. Maks: 2MB</small>
                                     @error('gambar')
                                         <div class="invalid-feedback">{{ $message }}</div>

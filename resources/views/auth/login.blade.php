@@ -17,6 +17,11 @@
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Masuk</button>
                     </form>
+                    <p class="text-center">Belum punya akun?</p>
+
+                    <a href="{{ route('register') }}">
+                        <button type="button" class="btn btn-warning w-100">Register</button>
+                    </a>
                 </div>
             </div>
         </div>
