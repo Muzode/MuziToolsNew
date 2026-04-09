@@ -48,7 +48,7 @@ Route::middleware(['auth', 'role:petugas'])->group(function () {
     Route::get('/petugas/dashboard', [PetugasController::class, 'index']);
     Route::post('/petugas/approve/{id}', [PetugasController::class, 'approve']); // Menyetujui
     Route::post('/petugas/return/{id}', [PetugasController::class, 'processReturn']); // Pengembalian
-    Route::get('/petugas/laporan', [PetugasController::class, 'report']); // Cetak Laporan
+    Route::get('/petugas/laporan', [PetugasController::class, 'report']);
 });
 // Group Peminjam (Lihat alat, Ajukan pinjam)
 Route::middleware(['auth', 'role:peminjam'])->group(function () {
@@ -58,3 +58,5 @@ Route::middleware(['auth', 'role:peminjam'])->group(function () {
 });
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+// Route untuk proses pengembalian dengan method POST
+Route::post('/petugas/return/{id}', [PetugasController::class, 'processReturn'])->name('petugas.return');

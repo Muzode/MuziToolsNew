@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Loan;
 use App\Models\Tool;
 use App\Models\ActivityLog;
+use Illuminate\Support\Facades\DB;
 
 class AdminReturnController extends Controller
 {
@@ -38,27 +39,73 @@ class AdminReturnController extends Controller
 
      * STORE: Proses Simpan Pengembalian (Action)
      */
-    public function store(Request $request)
+public function store(Request $request)
     {
         $request->validate([
-            'loan_id' => 'required|exists:loans,id',
-            'denda' => 'nullable|integer' // Opsional jika mau ada denda
+            'selected_loans' => 'required|array',
+            'selected_loans.*' => 'exists:loans,id',
+            'tanggal_kembali' => 'required|array',
+            'tanggal_kembali.*' => 'required|date',
+            'denda' => 'nullable|array'
         ]);
-        $loan = Loan::findOrFail($request->loan_id);
-        if ($loan->status != 'disetujui') {
-            return back()->with('error', 'Data tidak valid atau sudah dikembalikan.');
+        
+        $successCount = 0;
+        $totalDenda = 0;
+        $errors = [];
+        
+        DB::beginTransaction();
+        
+        try {
+            foreach ($request->selected_loans as $loanId) {
+                $loan = Loan::findOrFail($loanId);
+                
+                if ($loan->status != 'disetujui') {
+                    $errors[] = "Peminjaman {$loan->tool->nama_alat} oleh {$loan->user->name} sudah tidak aktif.";
+                    continue;
+                }
+                
+                $tanggalKembali = $request->tanggal_kembali[$loanId];
+                $denda = $request->denda[$loanId] ?? 0;
+                
+                // Update loan
+                $loan->update([
+                    'status' => 'kembali',
+                    'tanggal_kembali_aktual' => $tanggalKembali,
+                    'denda' => $denda
+                ]);
+                
+                // Kembalikan stok
+                $tool = Tool::findOrFail($loan->tool_id);
+                $tool->increment('stok');
+                
+                $successCount++;
+                $totalDenda += $denda;
+                
+                ActivityLog::record('Pengembalian (Admin)', 
+                    "Proses pengembalian alat: {$tool->nama_alat} oleh {$loan->user->name}" . 
+                    ($denda > 0 ? " | Denda: Rp " . number_format($denda, 0, ',', '.') : ""));
+            }
+            
+            DB::commit();
+            
+            $message = "Berhasil memproses {$successCount} pengembalian alat.";
+            if ($totalDenda > 0) {
+                $message .= " Total denda: Rp " . number_format($totalDenda, 0, ',', '.');
+            }
+            
+            if (!empty($errors)) {
+                return redirect()->route('admin.returns.index')
+                    ->with('warning', $message)
+                    ->with('errors', $errors);
+            }
+            
+            return redirect()->route('admin.returns.index')
+                ->with('success', $message);
+                
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-        // 1. Update Status & Tanggal
-        $loan->update([
-            'status' => 'kembali',
-            'tanggal_kembali_aktual' => now(),
-            // 'denda' => $request->denda // Jika tabel loans punya kolom denda
-        ]);
-        // 2. Kembalikan Stok Alat
-        $tool = Tool::findOrFail($loan->tool_id);
-        $tool->increment('stok');
-        ActivityLog::record('Pengembalian (Admin)', 'Memproses pengembalian alat: ' . $tool->nama_alat);
-        return redirect()->route('admin.returns.index')->with('success', 'Alat berhasil dikembalikan.');
     }
     /**
      * EDIT: Edit data pengembalian (Misal salah tanggal)
