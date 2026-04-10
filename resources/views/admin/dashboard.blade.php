@@ -113,7 +113,7 @@
                     </table>
                 </div>
                 <div class="card-footer text-end">
-                    <a href="{{ url('/admin/logs') }}" class="btn btn-sm btn-light">Lihat Semua Log</a>
+                    <a href="{{ route('admin.logs') }}" class="btn btn-sm btn-light">Lihat Semua Log</a>
                 </div>
             </div>
         </div>

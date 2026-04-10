@@ -42,6 +42,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         return view('admin.logs', compact('logs'));
     });
     // CRUD Peminjaman (Admin bisa full akses)
+    Route::resource('returns', AdminReturnController::class);
+    Route::post('/returns/{id}', [AdminReturnController::class, 'store'])->name('returns.store');
 });
 // Group Petugas (Approval, Memantau, Laporan)
 Route::middleware(['auth', 'role:petugas'])->group(function () {
@@ -60,3 +62,11 @@ Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 // Route untuk proses pengembalian dengan method POST
 Route::post('/petugas/return/{id}', [PetugasController::class, 'processReturn'])->name('petugas.return');
+Route::post('/admin/returns', [AdminReturnController::class, 'store'])
+    ->name('admin.returns.store');
+
+// Di dalam group admin
+Route::get('/admin/logs', function () {
+    $logs = ActivityLog::with('user')->latest()->paginate(20); // Tambahkan pagination
+    return view('admin.logs', compact('logs'));
+})->name('admin.logs');

@@ -83,7 +83,7 @@
                                             <input type="hidden" name="tanggal_kembali_aktual" class="hidden-tgl" value="">
                                             <button type="submit" class="btn btn-primary btn-sm">Proses Kembali</button>
                                         </form>
-                                    </td>
+                                    </td> 
                                 </tr>
                             @empty
                                 <tr>

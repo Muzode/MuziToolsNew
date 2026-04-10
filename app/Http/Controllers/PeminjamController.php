@@ -27,7 +27,7 @@ class PeminjamController extends Controller
                 'tanggal_kembali_rencana' => $request->tanggal_kembali,
                 'status' => 'pending'
             ]);
-            ActivityLog::record('Tambah Alat', 'Menambahkan alat baru: ' . $request->nama_alat);
+            ActivityLog::record('Tambah Alat', 'Meminjam alat baru: ' . $request->nama_alat);
             // Opsional: Kurangi stok langsung atau saat disetujui (tergantung logika bisnis)
             return back()->with('success', 'Pengajuan berhasil, menunggu persetujuan.');
         }

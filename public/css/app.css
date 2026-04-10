@@ -276,20 +276,36 @@ body::before {
     font-size: 0.85rem;
 }
 
-/* Pagination Styles */
+/* Perbaikan Pagination - Ukuran Normal */
 .pagination {
-    margin-top: 25px;
-    gap: 8px;
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    border-radius: 50px;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.pagination .page-item {
+    margin: 0;
 }
 
 .pagination .page-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    min-width: 36px;
+    height: 36px;
+    font-size: 0.85rem;
+    line-height: 1.25;
+    color: #7A9BAB;
     background: rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(168, 216, 234, 0.5);
-    color: #7A9BAB;
     border-radius: 50px;
-    padding: 8px 16px;
     transition: all 0.3s ease;
-    font-weight: 500;
+    text-decoration: none;
 }
 
 .pagination .page-link:hover {
@@ -299,11 +315,30 @@ body::before {
     border-color: transparent;
 }
 
-.pagination .active .page-link {
+.pagination .page-item.active .page-link {
     background: linear-gradient(135deg, var(--pastel-blue) 0%, var(--aqua-pastel) 100%);
     color: #5A7B8C;
     border-color: transparent;
     box-shadow: 0 2px 8px rgba(168, 216, 234, 0.3);
+}
+
+.pagination .page-item.disabled .page-link {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Khusus untuk tombol Previous dan Next */
+.pagination .page-item:first-child .page-link,
+.pagination .page-item:last-child .page-link {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+}
+
+.pagination .page-item:first-child .page-link i,
+.pagination .page-item:last-child .page-link i {
+    font-size: 12px;
+    margin: 0 2px;
 }
 
 /* Alert Styles - Soft */
@@ -553,8 +588,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 /* Karakter Melayang */
 .floating-character {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
+    bottom: 3px;
+    right: 3px;
     z-index: 9999;
     cursor: pointer;
     transition: all 0.3s ease;
