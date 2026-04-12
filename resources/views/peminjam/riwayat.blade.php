@@ -10,6 +10,7 @@
                         <th>Tgl Pinjam</th>
                         <th>Rencana Kembali</th>
                         <th>Status</th>
+                        <th>Denda</th>
                         <th>Catatan</th>
                     </tr>
                 </thead>
@@ -29,6 +30,12 @@
                                 @elseif($loan->status == 'ditolak')
                                     <span class="badge bg-danger">Ditolak</span>
                                 @endif
+                            </td>
+                            <td>
+                                Rp.{{ number_format($loan->denda, 0, ',', '.') }}
+                                @empty($loan->denda)
+                                    <span class="text-muted">-</span>
+                                @endempty
                             </td>
                             <td>
                                 @if ($loan->status == 'disetujui')

@@ -17,13 +17,14 @@
                         <th>Tgl Pinjam</th>
                         <th>Tgl Kembali (Aktual)</th>
                         <th>Denda</th>
+                        <th>Keterangan Kondisi</th>
                         <th>Petugas</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($returns as $key => $r)
-                        <tr>
+                        <>
                             <td>{{ $returns->firstItem() + $key }}</td>
                             <td>{{ $r->user->name }}</td>
                             <td>{{ $r->tool->nama_alat }}</td>
@@ -37,6 +38,18 @@
                                 @endif
                             </td>
                             <td>{{ number_format($r->denda, 0, ',', '.') }}</td>
+                            <td>
+                                <div>{{ $r->keterangan_kondisi ?? '-' }}</div>
+                                <div>
+                                    @if ($r->gambar_kondisi)
+                                        <a href="{{ asset('storage/' . $r->gambar_kondisi) }}" target="_blank"
+                                            class="btn btn-sm btn-info">
+                                            <i class="fas fa-image"></i> Lihat
+                                        </a>
+                                    @else
+                                        <span class="text-muted"><i class="fas fa-image"></i>none</span>
+                                    @endif
+                                </div>
                             <td>{{ $r->petugas ? $r->petugas->name : 'Admin' }}</td>
                             <td>
                                 <a href="{{ route('admin.returns.edit', $r->id) }}" class="btn btn-warning btn-sm">Edit</a>
@@ -47,11 +60,11 @@
                                     <button class="btn btn-danger btn-sm">Hapus</button>
                                 </form>
                             </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="text-center">Belum ada data pengembalian.</td>
-                        </tr>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center">Belum ada data pengembalian.</td>
+                            </tr>
                     @endforelse
                 </tbody>
             </table>

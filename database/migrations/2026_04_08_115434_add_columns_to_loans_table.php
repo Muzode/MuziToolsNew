@@ -13,13 +13,15 @@ return new class extends Migration
             if (!Schema::hasColumn('loans', 'denda')) {
                 $table->decimal('denda', 12, 2)->nullable()->after('tanggal_kembali_aktual');
             }
+            $table->text('keterangan_kondisi')->nullable()->after('denda_per_hari');
+            $table->string('gambar_kondisi')->nullable()->after('keterangan_kondisi');
         });
     }
 
     public function down(): void
     {
         Schema::table('loans', function (Blueprint $table) {
-            $table->dropColumn('denda');
+            $table->dropColumn('denda', 'keterangan_kondisi', 'gambar_kondisi');
         });
     }
 };

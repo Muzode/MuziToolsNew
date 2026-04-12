@@ -13,6 +13,7 @@ use App\Http\Controllers\UserController;
 use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\AdminLogsController;
 
 // Login & Logout (Semua Role)
 Route::get('/', function () {
@@ -37,11 +38,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('categories', CategoryController::class); // CRUD Kategori
     Route::resource('admin/loans', AdminLoanController::class)->names('admin.loans');
     Route::resource('admin/returns', AdminReturnController::class)->names('admin.returns');
-    Route::get('/admin/logs', function () {
-        $logs = ActivityLog::with('user')->latest()->get();
-        return view('admin.logs', compact('logs'));
-    });
-    // CRUD Peminjaman (Admin bisa full akses)
+    // ✅ BARU (Di route admin group):
+    Route::get('/admin/logs', [AdminLogsController::class, 'index'])->name('admin.logs');    // CRUD Peminjaman (Admin bisa full akses)
     Route::resource('returns', AdminReturnController::class);
     Route::post('/returns/{id}', [AdminReturnController::class, 'store'])->name('returns.store');
 });
@@ -64,9 +62,3 @@ Route::post('/register', [RegisterController::class, 'store'])->name('register.s
 Route::post('/petugas/return/{id}', [PetugasController::class, 'processReturn'])->name('petugas.return');
 Route::post('/admin/returns', [AdminReturnController::class, 'store'])
     ->name('admin.returns.store');
-
-// Di dalam group admin
-Route::get('/admin/logs', function () {
-    $logs = ActivityLog::with('user')->latest()->paginate(20); // Tambahkan pagination
-    return view('admin.logs', compact('logs'));
-})->name('admin.logs');

@@ -7,6 +7,7 @@ use App\Models\Loan;
 use App\Models\Tool;
 use App\Models\ActivityLog;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
 class AdminReturnController extends Controller
@@ -22,7 +23,7 @@ class AdminReturnController extends Controller
             ->paginate(10);
         return view('admin.returns.index', compact('returns'));
     }
-    
+
     /**
      * CREATE (Form): Menampilkan daftar alat yang SEDANG DIPINJAM
      */
@@ -34,62 +35,77 @@ class AdminReturnController extends Controller
             ->get();
         return view('admin.returns.create', compact('activeLoans'));
     }
-    
+
     /**
      * STORE: Proses Simpan Pengembalian
      */
-public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
-            'loan_id' => 'required|exists:loans,id', // Tambahkan validasi loan_id
+            'loan_id' => 'required|exists:loans,id',
             'tanggal_kembali_aktual' => 'required|date',
+            'keterangan_kondisi' => 'nullable|string|max:500', // Tambah ini
+            'gambar_kondisi' => 'nullable|image|mimes:jpeg,png,jpg|max:2048' // Tambah ini
         ]);
-    
-        $loan = Loan::findOrFail($request->loan_id); // Ambil dari request
-    
+
+        $loan = Loan::findOrFail($request->loan_id);
+
         if ($loan->status !== 'disetujui') {
             return back()->with('error', 'Peminjaman tidak valid atau sudah dikembalikan.');
         }
-    
+
         $tanggalAktual = Carbon::parse($request->tanggal_kembali_aktual);
         $tanggalRencana = Carbon::parse($loan->tanggal_kembali_rencana);
-        
-        // Hitung denda
+
+        // Hitung denda (logic sudah ada)
         $denda = 0;
         $hariTelat = 0;
-        
-if ($tanggalAktual->gt($tanggalRencana)) {
-    // Cara 1: Gunakan diffInDays dengan urutan yang benar
-    $hariTelat = $tanggalRencana->diffInDays($tanggalAktual);
-    
-    // Atau Cara 2: Gunakan diffInDays dengan parameter absolute (lebih aman)
-    // $hariTelat = $tanggalAktual->diffInDays($tanggalRencana, false);
-    // if ($hariTelat < 0) $hariTelat = abs($hariTelat);
-    
-    $denda = $hariTelat * ($loan->denda_per_hari ?? 5000);
-}        
-        // Update loan
+
+        if ($tanggalAktual->gt($tanggalRencana)) {
+            $hariTelat = $tanggalRencana->diffInDays($tanggalAktual);
+            $denda = $hariTelat * ($loan->denda_per_hari ?? 5000);
+        }
+
+        // Handle file upload
+        $gambarKondisi = null;
+        if ($request->hasFile('gambar_kondisi')) {
+            $image = $request->file('gambar_kondisi');
+            $gambarKondisi = time() . '.' . $image->extension();
+
+            // Simpan ke storage
+            $path = $image->storeAs('public/returns', $gambarKondisi);
+
+            // Simpan path ke database
+            $loan = new Loan();
+            $loan->gambar_kondisi = 'returns/' . $gambarKondisi;
+            $loan->save();
+        }        // Update loan dengan data kondisi
         $loan->update([
             'status' => 'kembali',
             'tanggal_kembali_aktual' => $tanggalAktual,
-            'denda' => $denda
+            'denda' => $denda,
+            'keterangan_kondisi' => $request->keterangan_kondisi, // Tambah
+            'gambar_kondisi' => $gambarKondisi // Tambah
         ]);
-    
+
         // Kembalikan stok alat
         $tool = Tool::find($loan->tool_id);
         if ($tool) {
             $tool->increment('stok');
         }
-    
+
         // Catat aktivitas
-        ActivityLog::record('Pengembalian (Admin)', 'Memproses pengembalian alat: ' . ($loan->tool->nama_alat ?? '-') . ' dengan denda Rp ' . number_format($denda, 0, ',', '.'));
-    
+        ActivityLog::record(
+            'Pengembalian (Admin)',
+            'Memproses pengembalian alat: ' . ($loan->tool->nama_alat ?? '-') . ' dengan denda Rp ' . number_format($denda, 0, ',', '.')
+        );
+
         if ($denda > 0) {
             return redirect()->route('admin.returns.create')->with('success', 'Alat telah dikembalikan. Telat ' . $hariTelat . ' hari, Denda: Rp ' . number_format($denda, 0, ',', '.'));
         }
-        
+
         return redirect()->route('admin.returns.create')->with('success', 'Alat telah dikembalikan tepat waktu.');
-    }    
+    }
     /**
      * EDIT: Edit data pengembalian
      */
@@ -101,7 +117,7 @@ if ($tanggalAktual->gt($tanggalRencana)) {
         }
         return view('admin.returns.edit', compact('loan'));
     }
-    
+
     /**
      * UPDATE: Simpan perubahan data pengembalian
      */
@@ -111,14 +127,25 @@ if ($tanggalAktual->gt($tanggalRencana)) {
         $request->validate([
             'tanggal_kembali_aktual' => 'required|date'
         ]);
-        
+
         $loan->update([
             'tanggal_kembali_aktual' => $request->tanggal_kembali_aktual
         ]);
-        
+        $data = $request->except(['gambar_kondisi']);
+        // Handle Ganti Gambar
+        if ($request->hasFile('gambar_kondisi')) {
+            // Hapus gambar lama jika ada
+            if ($loan->gambar_kondisi && Storage::disk('public')->exists($loan->gambar_kondisi)) {
+                Storage::disk('public')->delete($loan->gambar_kondisi);
+            }
+            // Simpan gambar baru
+            $data['gambar_kondisi'] = $request->file('gambar_kondisi')->store('returns', 'public');
+        }
+        $loan->update($data);
+        ActivityLog::record('Update Pengembalian', 'Memperbarui data pengembalian: ' . $loan->tool->nama_alat);
         return redirect()->route('admin.returns.index')->with('success', 'Data pengembalian diperbarui.');
     }
-    
+
     /**
      * DESTROY: Hapus riwayat pengembalian
      */

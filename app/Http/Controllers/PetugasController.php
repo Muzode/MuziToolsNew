@@ -25,7 +25,7 @@ class PetugasController extends Controller
         return view('petugas.dashboard', compact('loans', 'activeLoans', 'sudahDikembalikan'));
     }
 
-    public function approve($id) 
+    public function approve($id)
     {
         $loan = Loan::findOrFail($id);
         $loan->update([
@@ -42,46 +42,58 @@ class PetugasController extends Controller
         return back()->with('success', 'Peminjaman disetujui.');
     }
 
-    public function processReturn(Request $request, $id) 
+    public function processReturn(Request $request, $id)
     {
         $request->validate([
             'tanggal_kembali_aktual' => 'required|date',
+            'keterangan_kondisi' => 'nullable|string|max:500', // Tambah
+            'gambar_kondisi' => 'nullable|image|mimes:jpeg,png,jpg|max:2048' // Tambah
         ]);
-    
+
         $loan = Loan::findOrFail($id);
-    
+
         if ($loan->status !== 'disetujui') {
             return back()->with('error', 'Peminjaman tidak valid atau sudah dikembalikan.');
         }
-    
+
         $tanggalAktual = Carbon::parse($request->tanggal_kembali_aktual);
-        
+
         // Simpan tanggal aktual
         $loan->tanggal_kembali_aktual = $tanggalAktual;
-        
+
         // Hitung denda (method sudah benar)
         $denda = $loan->calculateDenda();
-        
-        // Update status, tanggal aktual, dan denda
+
+        // Handle file upload
+        $gambarKondisi = null;
+        if ($request->hasFile('gambar_kondisi')) {
+            // Simpan di folder: storage/app/public/returns
+            $gambarKondisi = $request->file('gambar_kondisi')->store('returns', 'public');
+        }
+
+        // Update status, tanggal aktual, denda, dan kondisi
         $loan->status = 'kembali';
         $loan->denda = $denda;
+        $loan->keterangan_kondisi = $request->keterangan_kondisi; // Tambah
+        $loan->gambar_kondisi = $gambarKondisi; // Tambah
         $loan->save();
-    
         // Kembalikan stok alat
         $tool = Tool::find($loan->tool_id);
         if ($tool) {
             $tool->increment('stok');
         }
-    
-        // Catat aktivitas (opsional)
+
+        // Catat aktivitas
         if (class_exists(ActivityLog::class)) {
-            ActivityLog::record('Pengembalian (Petugas)', 'Memproses pengembalian alat: ' . ($loan->tool->nama_alat ?? '-') . ' dengan denda Rp ' . number_format($denda, 0, ',', '.'));
+            ActivityLog::record(
+                'Pengembalian (Petugas)',
+                'Memproses pengembalian alat: ' . ($loan->tool->nama_alat ?? '-') . ' dengan denda Rp ' . number_format($denda, 0, ',', '.')
+            );
         }
-    
+
         return back()->with('success', 'Alat telah dikembalikan. Denda: Rp ' . number_format($denda, 0, ',', '.'));
     }
-
-    public function report(Request $request) 
+    public function report(Request $request)
     {
         // Bisa tambahkan filter tanggal jika mau
         $loans = Loan::with(['user', 'tool'])->get();

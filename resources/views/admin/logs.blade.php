@@ -231,23 +231,25 @@
 
 @push('scripts')
     <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#logs-table').DataTable({
-                "order": [
-                    [6, "desc"]
-                ], // Sort by date descending
-                "pageLength": 25,
-                "language": {
-                    "lengthMenu": "Show _MENU_ entries per page",
-                    "zeroRecords": "No records found",
-                    "info": "Showing _START_ to _END_ of _TOTAL_ entries",
-                    "infoEmpty": "No entries available",
-                    "infoFiltered": "(filtered from _MAX_ total entries)"
-                }
-            });
-        });
-    </script>
+    <!-- DataTables JS - DISABLED KARENA PAKAI PAGINATION SERVER-SIDE -->
+    <!--
+        <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                    $('#logs-table').DataTable({
+                        "order": [
+                            [6, "desc"]
+                        ], // Sort by date descending
+                        "pageLength": 25,
+                        "language": {
+                            "lengthMenu": "Show _MENU_ entries per page",
+                            "zeroRecords": "No records found",
+                            "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+                            "infoEmpty": "No entries available",
+                            "infoFiltered": "(filtered from _MAX_ total entries)"
+                        }
+                    });
+                });
+            </script>
 @endpush

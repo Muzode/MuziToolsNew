@@ -9,6 +9,12 @@ class Loan extends Model
 {
     protected $guarded = [];
 
+    protected $fillable = [
+    'user_id', 'tool_id', 'tanggal_pinjam', 'tanggal_kembali_rencana',
+    'tanggal_kembali_aktual', 'status', 'petugas_id', 'denda_per_hari',
+    'denda', 'keterangan_kondisi', 'gambar_kondisi' // Tambah ini
+];
+
     protected $casts = [
         'tanggal_pinjam'        => 'datetime',
         'tanggal_kembali_rencana'=> 'datetime',
