@@ -353,7 +353,7 @@
                 Sistem manajemen peminjaman alat laboratorium dan bengkel sekolah yang terintegrasi,
                 cepat, dan transparan.
             </p>
-            <a href="#" class="btn btn-lg btn-warning fw-bold px-5" onclick="showLoginAlert(event)" style="animation-delay: 0.2s;">
+            <a href="{{ route('login') }}" class="btn btn-lg btn-warning fw-bold px-5" onclick="showLoginAlert(event)" style="animation-delay: 0.2s;">
                 <i class="fas fa-hand-peace me-2"></i>Mulai Peminjaman
             </a>
         </div>
