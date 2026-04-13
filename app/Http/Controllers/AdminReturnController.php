@@ -68,17 +68,15 @@ class AdminReturnController extends Controller
 
         // Handle file upload
         $gambarKondisi = null;
+        // 2. Handle Upload Gambar (Jika ada)
+        $gambarKondisi = null;
         if ($request->hasFile('gambar_kondisi')) {
-            $image = $request->file('gambar_kondisi');
-            $gambarKondisi = time() . '.' . $image->extension();
-
-            // Simpan ke storage
-            $path = $image->storeAs('public/returns', $gambarKondisi);
+            // Simpan di folder: storage/app/public/tools
+            $gambarKondisi = $request->file('gambar_kondisi')->store('returns', 'public');
 
             // Simpan path ke database
-            $loan = new Loan();
             $loan->gambar_kondisi = 'returns/' . $gambarKondisi;
-            $loan->save();
+            $loan->save(); 
         }        // Update loan dengan data kondisi
         $loan->update([
             'status' => 'kembali',

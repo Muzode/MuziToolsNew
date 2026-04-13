@@ -24,7 +24,7 @@
                 </thead>
                 <tbody>
                     @forelse($returns as $key => $r)
-                        <>
+                        
                             <td>{{ $returns->firstItem() + $key }}</td>
                             <td>{{ $r->user->name }}</td>
                             <td>{{ $r->tool->nama_alat }}</td>
@@ -63,7 +63,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center">Belum ada data pengembalian.</td>
+                                <td colspan="9" class="text-center">Belum ada data pengembalian.</td>
                             </tr>
                     @endforelse
                 </tbody>

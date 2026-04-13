@@ -19,7 +19,7 @@
                         <div class="mb-3">
                             <label>Tanggal Kembali Aktual</label>
                             <input type="date" name="tanggal_kembali_aktual" class="form-control"
-                                value="{{ $loan->tanggal_kembali_aktual }}" required>
+                                value="{{ date('Y-m-d') }}" required>
                             <small class="text-muted">Ubah tanggal ini jika admin salah input waktu pengembalian.</small>
                         </div>
                         <div class="col-md-6 mb-3">

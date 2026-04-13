@@ -31,12 +31,12 @@
                         <label>Tgl Pinjam</label>
 
                         <input type="date" name="tanggal_pinjam" class="form-control"
-                            value="{{ $loan->tanggal_pinjam }}">
+                            value="{{ date('Y-m-d') }}">
                     </div>
                     <div class="col">
                         <label>Rencana Kembali</label>
                         <input type="date" name="tanggal_kembali_rencana" class="form-control"
-                            value="{{ $loan->tanggal_kembali_rencana }}">
+                            value="{{ date('Y-m-d') }}">
                     </div>
                 </div>
                 <div class="mb-3">

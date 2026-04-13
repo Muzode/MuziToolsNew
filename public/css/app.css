@@ -3,7 +3,7 @@
 /* Custom Color Variables - Tema Pastel Laut */
 :root {
     /* Warna Biru Pastel */
-    --pastel-blue: #a8d8ea; /* Biru pastel lembut */
+    --pastel-blue: #92d1e7; /* Biru pastel lembut */
     --soft-blue: #c5e0f4; /* Biru lembut */
     --powder-blue: #b8d4e3; /* Biru bubuk */
     --mist-blue: #d4eaf7; /* Biru kabut */
@@ -15,7 +15,7 @@
     --aqua-pastel: #c2e0f0; /* Aqua pastel */
 
     /* Aksen Pastel */
-    --coral-pastel: #f2b5a8; /* Coral pastel */
+    --coral-pastel: #e69d8c; /* Coral pastel */
     --peach-pastel: #f5d0b8; /* Peach pastel */
     --sand-pastel: #f5e6d3; /* Pasir pastel */
     --yellow-pastel: #f5e6b8; /* Kuning pastel */
@@ -76,6 +76,42 @@ body::before {
 .container-fluid {
     position: relative;
     z-index: 1;
+}
+
+/* bg-primary - pakai warna pastel blue */
+.bg-primary {
+    background: linear-gradient(135deg, var(--pastel-blue) 0%, var(--aqua-pastel) 100%) !important;
+    color: #4a6b7a !important;
+}
+
+/* bg-secondary - pakai powder blue */
+.bg-secondary {
+    background: linear-gradient(135deg, var(--powder-blue) 0%, var(--mist-blue) 100%) !important;
+    color: #4a6b7a !important;
+}
+
+/* bg-success - pakai seafoam + sage */
+.bg-success {
+    background: linear-gradient(135deg, var(--seafoam-pastel) 0%, var(--sage-pastel) 100%) !important;
+    color: #4a6b5a !important;
+}
+
+/* bg-danger - pakai coral pastel */
+.bg-danger {
+    background: linear-gradient(135deg, var(--coral-pastel) 0%, #f0b8a8 100%) !important;
+    color: #8b6b6b !important;
+}
+
+/* bg-warning - pakai sand + yellow */
+.bg-warning {
+    background: var(--gradient-sand) !important;
+    color: #8b7a6b !important;
+}
+
+/* bg-info - pakai aqua + pastel blue */
+.bg-info {
+    background: linear-gradient(135deg, var(--aqua-pastel) 0%, var(--pastel-blue) 100%) !important;
+    color: #4a6b7a !important;
 }
 
 /* Card Styles - Soft & Elegant */
