@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-header fw-bold">Edit Data Pengembalian</div>
                 <div class="card-body">
-                    <form action="{{ route('admin.returns.update', $loan->id) }}" method="POST">
+                    <form action="{{ route('admin.returns.update', $loan->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="mb-3">
@@ -21,6 +21,18 @@
                             <input type="date" name="tanggal_kembali_aktual" class="form-control"
                                 value="{{ $loan->tanggal_kembali_aktual }}" required>
                             <small class="text-muted">Ubah tanggal ini jika admin salah input waktu pengembalian.</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Ganti Gambar (Opsional)</label>
+                            <input type="file" name="gambar_kondisi" class="form-control @error('gambar') is-invalid @enderror"
+                                accept="image/*">
+                            @if ($loan->gambar_kondisi)
+                                <div class="mt-2">
+                                    <small class="text-muted d-block mb-1">Gambar Saat Ini:</small>
+                                    <img src="{{ asset('storage/' . $loan->gambar_kondisi) }}" alt="Current Image"
+                                        class="img-thumbnail" style="height: 80px;">
+                                </div>
+                            @endif
                         </div>
                         <div class="mb-3">
                             <label>Keterangan Kondisi</label>

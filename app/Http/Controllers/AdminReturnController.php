@@ -124,33 +124,44 @@ class AdminReturnController extends Controller
     public function update(Request $request, $id)
     {
         $loan = Loan::findOrFail($id);
+
         $request->validate([
-            'tanggal_kembali_aktual' => 'required|date'
+            'tanggal_kembali_aktual' => 'required|date',
+            'gambar_kondisi' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        $loan->update([
+        // Siapkan data untuk update
+        $data = [
             'tanggal_kembali_aktual' => $request->tanggal_kembali_aktual
-        ]);
-        $data = $request->except(['gambar_kondisi']);
-        // Handle Ganti Gambar
+        ];
+
+        // Handle upload gambar baru
         if ($request->hasFile('gambar_kondisi')) {
             // Hapus gambar lama jika ada
             if ($loan->gambar_kondisi && Storage::disk('public')->exists($loan->gambar_kondisi)) {
                 Storage::disk('public')->delete($loan->gambar_kondisi);
             }
+
             // Simpan gambar baru
             $data['gambar_kondisi'] = $request->file('gambar_kondisi')->store('returns', 'public');
         }
+
+        // Update data sekaligus (hanya sekali)
         $loan->update($data);
+
         ActivityLog::record('Update Pengembalian', 'Memperbarui data pengembalian: ' . $loan->tool->nama_alat);
+
         return redirect()->route('admin.returns.index')->with('success', 'Data pengembalian diperbarui.');
     }
-
     /**
      * DESTROY: Hapus riwayat pengembalian
      */
-    public function destroy($id)
+    public function destroy($id, Loan $loan)
     {
+        if ($loan->gambar_kondisi && Storage::disk('public')->exists($loan->gambar_kondisi)) {
+            Storage::disk('public')->delete($loan->gambar_kondisi);
+        }
+
         $loan = Loan::findOrFail($id);
         $loan->delete();
         return redirect()->route('admin.returns.index')->with('success', 'Riwayat dihapus.');

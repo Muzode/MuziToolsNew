@@ -35,13 +35,13 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Jumlah Stok</label>
                                     <input type="number" name="stok"
-                                        class="form-control @error('stok') isinvalid @enderror"
+                                        class="form-control @error('stok') is-invalid @enderror"
                                         value="{{ old('stok', $tool->stok) }}" min="0" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Ganti Gambar (Opsional)</label>
                                     <input type="file" name="gambar"
-                                        class="form-control @error('gambar') isinvalid @enderror" accept="image/*">
+                                        class="form-control @error('gambar') is-invalid @enderror" accept="image/*">
                                     @if ($tool->gambar)
                                         <div class="mt-2">
                                             <small class="text-muted d-block mb-1">Gambar Saat Ini:</small>
