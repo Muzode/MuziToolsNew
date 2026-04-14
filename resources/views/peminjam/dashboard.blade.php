@@ -1,6 +1,14 @@
 @extends('layouts.app')
 @section('content')
     <h3 class="">Daftar Alat Tersedia</h3>
+        <div class="mb-3">
+        <form action="{{ url('/peminjam/dashboard') }}" method="GET" class="d-flex gap-2" style="max-width: 400px;">
+            <input type="text" name="search" class="form-control" placeholder="Cari alat atau kategori..."
+                value="{{ request('search') }}">
+            <button type="submit" class="btn btn-secondary">Cari</button>
+        </form>
+    </div>
+
     <div class="row mt-4">
         @foreach ($tools as $tool)
             <div class="col-md-4 mb-4">

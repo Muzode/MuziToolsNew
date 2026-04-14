@@ -17,7 +17,10 @@ class PetugasController extends Controller
         $loans = Loan::where('status', 'pending')->with(['user', 'tool'])->get();
 
         //data yang statusnya disetujui (sedang dipinjam)
-        $activeLoans = Loan::where('status', 'disetujui')->with(['user', 'tool'])->get();
+        $activeLoans = Loan::where(function ($query) {
+            $query->where('status', 'diajukan')
+                  ->orWhere('status', 'disetujui');
+        })->with(['user', 'tool'])->get();
 
         //data yang statusnya kembali
         $sudahDikembalikan = Loan::where('status', 'kembali')->with(['user', 'tool'])->latest('tanggal_kembali_aktual')->get();
@@ -35,11 +38,35 @@ class PetugasController extends Controller
 
         // Kurangi stok alat
         $tool = Tool::find($loan->tool_id);
-        if ($tool) {
+        if ($tool && $tool->stok > 0) {
             $tool->decrement('stok');
+        } else {
+            // Jika stok habis, batalkan approval
+            $loan->update(['status' => 'pending']);
+            return back()->with('error', 'Stok alat habis, tidak dapat menyetujui peminjaman.');
+        }
+        return back()->with('success', 'Peminjaman disetujui.');
+    }
+
+    public function reject($id)
+    {
+        $loan = Loan::findOrFail($id);
+
+        // Hanya bisa menolak yang statusnya masih 'pending'
+        if ($loan->status != 'pending') {
+            return back()->with('error', 'Peminjaman sudah diproses, tidak dapat ditolak.');
         }
 
-        return back()->with('success', 'Peminjaman disetujui.');
+        $loan->update([
+            'status' => 'ditolak',
+            'petugas_id' => Auth::id(),
+            'tanggal_kembali_aktual' => null // Pastikan tidak terisi
+        ]);
+
+        // Catat aktivitas (opsional)
+        ActivityLog::record('Tolak Peminjaman', 'Menolak peminjaman alat: ' . $loan->tool->nama_alat . ' oleh ' . $loan->user->name);
+
+        return back()->with('success', 'Peminjaman ditolak.');
     }
 
     public function processReturn(Request $request, $id)
@@ -52,10 +79,9 @@ class PetugasController extends Controller
 
         $loan = Loan::findOrFail($id);
 
-        if ($loan->status !== 'disetujui') {
-            return back()->with('error', 'Peminjaman tidak valid atau sudah dikembalikan.');
+        if ($loan->status != 'diajukan' && $loan->status != 'disetujui') {
+            return back()->with('error', 'Tidak ada pengajuan pengembalian untuk peminjaman ini.');
         }
-
         $tanggalAktual = Carbon::parse($request->tanggal_kembali_aktual);
 
         // Simpan tanggal aktual

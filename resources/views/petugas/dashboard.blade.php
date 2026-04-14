@@ -31,7 +31,11 @@
                                                 @csrf
                                                 <button class="btn btn-success btn-sm">Setujui</button>
                                             </form>
-                                            <button class="btn btn-danger btn-sm">Tolak</button>
+                                            <form action="{{ url('/petugas/reject/' . $loan->id) }}" method="POST"
+                                                class="d-inline">
+                                                @csrf
+                                                <button class="btn btn-danger btn-sm">Tolak</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @empty
@@ -69,7 +73,14 @@
                                     <tr id="loan-row-{{ $active->id }}">
                                         <td>{{ $active->user->name }}</td>
                                         <td>{{ $active->tool->nama_alat }}</td>
-                                        <td><span class="badge bg-primary">{{ $active->status }}</span></td>
+                                        <td>
+                                            @if ($active->status == 'diajukan')
+                                                <span class="badge bg-primary">Konfirmasi</span>
+                                            @elseif($active->status == 'disetujui')
+                                                <span class="badge bg-warning text-dark">Dipinjam</span>
+                                            @else
+                                                <span class="badge bg-info">{{ $active->status }}</span>
+                                            @endif
                                         <td class="tgl-rencana"
                                             data-tgl="{{ $active->tanggal_kembali_rencana->format('Y-m-d') }}">
                                             {{ $active->tanggal_kembali_rencana->format('d-m-Y') }}
@@ -143,8 +154,8 @@
                                             <div>{{ $sudah->keterangan_kondisi ?? '-' }}</div>
                                             <div>
                                                 @if ($sudah->gambar_kondisi)
-                                                    <a href="{{ asset('storage/' . $sudah->gambar_kondisi) }}" target="_blank"
-                                                        class="btn btn-sm btn-info">
+                                                    <a href="{{ asset('storage/' . $sudah->gambar_kondisi) }}"
+                                                        target="_blank" class="btn btn-sm btn-info">
                                                         <i class="fas fa-image"></i> Lihat
                                                     </a>
                                                 @else

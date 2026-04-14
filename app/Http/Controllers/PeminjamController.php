@@ -10,9 +10,22 @@ use Illuminate\Support\Facades\Auth;
 
 class PeminjamController extends Controller
 {
-    public function index()
+    public function index(request $request)
     {
-        $tools = Tool::with('category')->get();
+        $query = Tool::with('category');
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_alat', 'like', '%' . $search . '%')
+                    ->orWhereHas('category', function ($q) use ($search) {
+                        $q->where('nama_kategori', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+        $tools = $query->get();  // ← Gunakan $query, bukan Tool:: lagi
+
         return view('peminjam.dashboard', compact('tools'));
     }
     public function store(Request $request)
@@ -39,5 +52,30 @@ class PeminjamController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
         return view('peminjam.riwayat', compact('loans'));
+    }
+
+    public function requestReturn($id)
+    {
+        $loan = Loan::where('user_id', Auth::id())->findOrFail($id);
+
+        // Cek apakah status sedang dipinjam (disetujui)
+        if ($loan->status != 'disetujui') {
+            return back()->with('error', 'Hanya peminjaman yang sedang dipinjam yang dapat diajukan pengembalian.');
+        }
+
+        // Cek apakah sudah pernah diajukan sebelumnya
+        if ($loan->pengembalian_diajukan) {
+            return back()->with('error', 'Pengajuan pengembalian sudah diajukan, mohon tunggu konfirmasi petugas.');
+        }
+
+        // Update status menjadi 'pengembalian_diajukan' atau tambah field baru
+        $loan->update([
+            'status' => 'diajukan',
+            'tanggal_pengembalian_diajukan' => now(),
+        ]);
+
+        ActivityLog::record('Ajukan Pengembalian', 'Mengajukan pengembalian alat: ' . $loan->tool->nama_alat);
+
+        return back()->with('success', 'Pengajuan pengembalian berhasil, menunggu konfirmasi petugas.');
     }
 }
