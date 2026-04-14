@@ -163,6 +163,7 @@ class AdminReturnController extends Controller
 
         $loan = Loan::findOrFail($id);
         $loan->delete();
+        ActivityLog::record('Delete Pengembalian', 'Menghapus data pengembalian: ' . $loan->tool->nama_alat);
         return redirect()->route('admin.returns.index')->with('success', 'Riwayat dihapus.');
     }
 }

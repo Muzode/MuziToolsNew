@@ -45,6 +45,7 @@ class PetugasController extends Controller
             $loan->update(['status' => 'pending']);
             return back()->with('error', 'Stok alat habis, tidak dapat menyetujui peminjaman.');
         }
+        ActivityLog::record('Setujui Peminjaman', 'Menyetujui peminjaman alat: ' . $loan->tool->nama_alat . ' oleh ' . $loan->user->name);
         return back()->with('success', 'Peminjaman disetujui.');
     }
 

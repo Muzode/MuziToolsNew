@@ -107,6 +107,7 @@ class AdminLoanController extends Controller
             'tanggal_kembali_aktual' => $request->tanggal_kembali_aktual ?? $loan->tanggal_kembali_aktual
         ]);
 
+        ActivityLog::record('Update Loan', 'Admin memperbarui data pinjaman ID: ' . $loan->id);
         return redirect()->route('admin.loans.index')->with('success', 'Data berhasil diperbarui.');
     }
 
@@ -121,6 +122,7 @@ class AdminLoanController extends Controller
         }
 
         $loan->delete();
+        ActivityLog::record('Delete Loan', 'Admin menghapus data pinjaman ID: ' . $loan->id);
         return redirect()->route('admin.loans.index')->with('success', 'Data berhasil dihapus.');
     }
 }
