@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <h3 class="">Daftar Alat Tersedia</h3>
+    <h3 class="text-dark">Daftar Alat Tersedia</h3>
         <div class="mb-3">
         <form action="{{ url('/peminjam/dashboard') }}" method="GET" class="d-flex gap-2" style="max-width: 400px;">
             <input type="text" name="search" class="form-control" placeholder="Cari alat atau kategori..."

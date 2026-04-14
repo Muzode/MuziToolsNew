@@ -232,22 +232,6 @@
             margin-top: 60px;
         }
 
-        /* Floating Character */
-        .floating-character {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 9999;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
-        }
-
 
         /* Animations */
         @keyframes fadeInUp {
@@ -274,25 +258,6 @@
         .card:nth-child(2) { animation-delay: 0.2s; }
         .card:nth-child(3) { animation-delay: 0.3s; }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(168, 216, 234, 0.2);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, var(--pastel-blue) 0%, var(--aqua-pastel) 100%);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--powder-blue);
-        }
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -329,17 +294,6 @@
             .navbar-brand {
                 font-size: 1.3rem;
             }
-            
-            .floating-character img {
-                width: 60px;
-                height: 60px;
-            }
-            
-            .bubble-chat {
-                bottom: 80px;
-                right: 10px;
-                min-width: 180px;
-            }
         }
     </style>
 </head>
@@ -348,9 +302,9 @@
     <!-- Hero Section -->
     <div class="hero-section text-center">
         <div class="container">
-            <h1 class="display-4 fw-bold fade-in-up">Peminjaman Alat Jadi Lebih Mudah</h1>
+            <h1 class="display-4 fw-bold fade-in-up">MuziTools</h1>
             <p class="lead mb-4 text-muted fade-in-up" style="animation-delay: 0.1s;">
-                Sistem manajemen peminjaman alat laboratorium dan bengkel sekolah yang terintegrasi,
+                Sistem manajemen peminjaman alat sarana sekolah yang terintegrasi,
                 cepat, dan transparan.
             </p>
             <a href="{{ route('login') }}" class="btn btn-lg btn-warning fw-bold px-5" onclick="showLoginAlert(event)" style="animation-delay: 0.2s;">
@@ -397,16 +351,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer class="text-center py-4 mt-auto">
-        <div class="container">
-            <small>
-                <i class="fas fa-calendar-alt me-1"></i> 
-                &copy; 2024 Sistem Peminjaman Alat. Dibuat dengan <i class="fas fa-heart" style="color: #F2B5A8;"></i> menggunakan Laravel
-            </small>
-        </div>
-    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

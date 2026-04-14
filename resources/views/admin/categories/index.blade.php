@@ -2,7 +2,7 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between text-dark align-items-center mb-4">
                 <h3>Kelola Kategori Alat</h3>
                 <a href="{{ route('categories.create') }}" class="btn btn-primary">
                     + Tambah Kategori

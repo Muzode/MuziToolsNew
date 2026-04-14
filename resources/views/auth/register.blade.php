@@ -8,7 +8,7 @@
 
     <div class="row justify-content-center">
         <div class="col-md-4">
-            <div class="card">
+            <div class="card text-dark">
                 <div class="card-body">
                     <form method="POST" action="{{ route('register.store') }}">
                         @csrf

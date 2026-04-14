@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <h3>Riwayat Peminjaman Saya</h3>
+    <h3 class="text-dark">Riwayat Peminjaman Saya</h3>
     <div class="card mt-3">
         <div class="card-body">
             <table class="table table-transparent">

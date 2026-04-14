@@ -82,8 +82,8 @@
                     Aktivitas Sistem Terakhir
                 </div>
                 <div class="card-body p-0">
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
+                    <table class="table table-transparent table-hover mb-0">
+                        <thead class="">
                             <tr>
                                 <th>Waktu</th>
                                 <th>User</th>

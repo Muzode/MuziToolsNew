@@ -80,25 +80,41 @@ body::before {
 
 /* bg-primary - pakai warna pastel blue */
 .bg-primary {
-    background: linear-gradient(135deg, var(--pastel-blue) 0%, var(--aqua-pastel) 100%) !important;
+    background: linear-gradient(
+        135deg,
+        var(--pastel-blue) 0%,
+        var(--aqua-pastel) 100%
+    ) !important;
     color: #4a6b7a !important;
 }
 
 /* bg-secondary - pakai powder blue */
 .bg-secondary {
-    background: linear-gradient(135deg, var(--powder-blue) 0%, var(--mist-blue) 100%) !important;
+    background: linear-gradient(
+        135deg,
+        var(--powder-blue) 0%,
+        var(--mist-blue) 100%
+    ) !important;
     color: #4a6b7a !important;
 }
 
 /* bg-success - pakai seafoam + sage */
 .bg-success {
-    background: linear-gradient(135deg, var(--seafoam-pastel) 0%, var(--sage-pastel) 100%) !important;
+    background: linear-gradient(
+        135deg,
+        var(--seafoam-pastel) 0%,
+        var(--sage-pastel) 100%
+    ) !important;
     color: #4a6b5a !important;
 }
 
 /* bg-danger - pakai coral pastel */
 .bg-danger {
-    background: linear-gradient(135deg, var(--coral-pastel) 0%, #f0b8a8 100%) !important;
+    background: linear-gradient(
+        135deg,
+        var(--coral-pastel) 0%,
+        #f0b8a8 100%
+    ) !important;
     color: #8b6b6b !important;
 }
 
@@ -110,7 +126,11 @@ body::before {
 
 /* bg-info - pakai aqua + pastel blue */
 .bg-info {
-    background: linear-gradient(135deg, var(--aqua-pastel) 0%, var(--pastel-blue) 100%) !important;
+    background: linear-gradient(
+        135deg,
+        var(--aqua-pastel) 0%,
+        var(--pastel-blue) 100%
+    ) !important;
     color: #4a6b7a !important;
 }
 
@@ -665,6 +685,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 /* Text Colors */
+.text-dark {
+    color: #4a6b7a !important;
+}
 .text-muted {
     color: #8ba3b0 !important;
 }
@@ -842,4 +865,28 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 /* Optional: Tambahkan efek shadow saat discroll */
 .navbar.sticky-top.scrolled {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(168, 216, 234, 0.2);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+        135deg,
+        var(--pastel-blue) 0%,
+        var(--aqua-pastel) 100%
+    );
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--powder-blue);
 }

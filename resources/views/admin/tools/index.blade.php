@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between text-dark align-items-center mb-4">
         <h3>Kelola Data Alat</h3>
         <a href="{{ route('tools.create') }}" class="btn btn-primary">
             + Tambah Alat Baru

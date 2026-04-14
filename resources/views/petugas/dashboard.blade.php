@@ -3,7 +3,7 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="card mb-4 shadow-sm border-0 rounded-4">
-            <h3 class="pt-4 pb-2">Permintaan Peminjaman Masuk</h3>
+            <h3 class="pt-4 pb-2 text-dark">Permintaan Peminjaman Masuk</h3>
             <div class="card">
                 <div class="card-header bg-warning text-dark">Menunggu Persetujuan</div>
                 <div class="card-body">

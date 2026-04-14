@@ -31,6 +31,7 @@ class AdminReturnController extends Controller
     {
         $activeLoans = Loan::with(['user', 'tool'])
             ->where('status', 'disetujui')
+            ->orWhere('status', 'diajukan')
             ->latest()
             ->get();
         return view('admin.returns.create', compact('activeLoans'));
@@ -50,8 +51,8 @@ class AdminReturnController extends Controller
 
         $loan = Loan::findOrFail($request->loan_id);
 
-        if ($loan->status !== 'disetujui') {
-            return back()->with('error', 'Peminjaman tidak valid atau sudah dikembalikan.');
+        if ($loan->status != 'diajukan' && $loan->status != 'disetujui') {
+            return back()->with('error', 'Tidak ada pengajuan pengembalian untuk peminjaman ini.');
         }
 
         $tanggalAktual = Carbon::parse($request->tanggal_kembali_aktual);

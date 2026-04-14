@@ -28,13 +28,12 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover align-middle">
+                        <table class="table table-transparent table-bordered table-striped table-hover align-middle">
                             <thead class="table-light">
                                 <tr class="text-center">
                                     <th>No</th>
-                                    <th>Peminjam</th>
+                                    <th>Peminjam & Status</th>
                                     <th>Alat</th>
-                                    <th>Status</th>
                                     <th>Tanggal</th>
                                     <th>Tanggal Kembali Aktual</th>
                                     <th>Denda</th>
@@ -46,20 +45,25 @@
                                 @forelse($activeLoans as $index => $active)
                                     <tr id="loan-row-{{ $active->id }}">
                                         <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td>{{ $active->user->name }}</td>
-                                        <td>{{ $active->tool->nama_alat }}</td>
-                                        <td>
-                                            <span class="badge bg-primary">{{ $active->status }}</span>
+                                        <td>{{ $active->user->name }}
+                                            @if ($active->status == 'diajukan')
+                                                <span class="badge bg-primary">Konfirmasi</span>
+                                            @elseif($active->status == 'disetujui')
+                                                <span class="badge bg-warning text-dark">Dipinjam</span>
+                                            @else
+                                            <span>{{ $active->status }}</span>
+                                            @endif
                                         </td>
+                                        <td>{{ $active->tool->nama_alat }}</td>
                                         <td>
                                             <div>
                                                 <p class="mb-0 fw-bold">Pinjam:</p>
-                                                {{ $active->tanggal_pinjam->format('d-m-Y') }}
+                                                <small class="text-muted">{{ $active->tanggal_pinjam->format('d-m-Y') }}</small>
                                             </div>
                                             <div class="tgl-rencana"
                                                 data-tgl="{{ $active->tanggal_kembali_rencana->format('Y-m-d') }}">
                                                 <p class="mb-0 fw-bold">Rencana:</p>
-                                                {{ $active->tanggal_kembali_rencana->format('d-m-Y') }}
+                                                <small class="text-muted">{{ $active->tanggal_kembali_rencana->format('d-m-Y') }}</small>
                                                 @if (now()->gt($active->tanggal_kembali_rencana))
                                                     <span class="badge bg-danger ms-1">Telat!</span>
                                                 @endif

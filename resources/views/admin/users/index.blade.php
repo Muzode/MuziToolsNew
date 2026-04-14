@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between text-dark align-items-center mb-4">
         <h3>Kelola Data Pengguna</h3>
         <a href="{{ route('users.create') }}" class="btn btn-primary">
             + Tambah User Baru

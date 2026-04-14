@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between text-dark align-items-center mb-4">
         <h3>Kelola Data Peminjaman (Admin)</h3>
         <a href="{{ route('admin.loans.create') }}" class="btn btn-primary">+ Tambah Peminjaman Manual</a>
     </div>
@@ -24,8 +24,8 @@
                             <td>{{ $loan->user->name }}</td>
                             <td>{{ $loan->tool->nama_alat }}</td>
                             <td>
-                                {{ $loan->tanggal_pinjam }} <br>
-                                <small class="text-muted">Kembali: {{ $loan->tanggal_kembali_rencana }}</small>
+                                {{ $loan->tanggal_pinjam->format('d-m-Y')  }} <br>
+                                <small class="text-muted">Kembali: {{ $loan->tanggal_kembali_rencana->format('d-m-Y') }}</small>
                             </td>
                             <td>
                                 @if ($loan->status == 'pending')

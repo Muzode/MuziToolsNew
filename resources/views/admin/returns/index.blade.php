@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between text-dark align-items-center mb-4">
         <h3>Data Pengembalian Alat</h3>
         <a href="{{ route('admin.returns.create') }}" class="btn btn-success">
             + Proses Pengembalian Baru
@@ -14,10 +14,10 @@
                         <th>No</th>
                         <th>Peminjam</th>
                         <th>Alat</th>
-                        <th>Tgl Pinjam</th>
-                        <th>Tgl Kembali (Aktual)</th>
+                        <th>Tanggal Pinjam</th>
+                        <th>Tanggal Aktual</th>
                         <th>Denda</th>
-                        <th>Keterangan Kondisi</th>
+                        <th>Kondisi</th>
                         <th>Petugas</th>
                         <th>Aksi</th>
                     </tr>
@@ -28,9 +28,9 @@
                             <td>{{ $returns->firstItem() + $key }}</td>
                             <td>{{ $r->user->name }}</td>
                             <td>{{ $r->tool->nama_alat }}</td>
-                            <td>{{ $r->tanggal_pinjam }}</td>
+                            <td>{{ $r->tanggal_pinjam->format('d-m-Y')  }}</td>
                             <td>
-                                {{ $r->tanggal_kembali_aktual }}
+                                {{ $r->tanggal_kembali_aktual->format('d-m-Y')  }}
                                 @if ($r->tanggal_kembali_aktual > $r->tanggal_kembali_rencana)
                                     <span class="badge bg-danger">Telat</span>
                                 @else

@@ -2,7 +2,7 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-4">
-            <div class="card">
+            <div class="card text-dark">
                 <div class="card-header">Login Aplikasi</div>
                 <div class="card-body">
                     <form action="{{ url('/login') }}" method="POST">
