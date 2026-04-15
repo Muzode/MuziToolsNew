@@ -19,7 +19,7 @@ class PetugasController extends Controller
         //data yang statusnya disetujui (sedang dipinjam)
         $activeLoans = Loan::where(function ($query) {
             $query->where('status', 'diajukan')
-                  ->orWhere('status', 'disetujui');
+                ->orWhere('status', 'disetujui');
         })->with(['user', 'tool'])->get();
 
         //data yang statusnya kembali
@@ -38,12 +38,13 @@ class PetugasController extends Controller
 
         // Kurangi stok alat
         $tool = Tool::find($loan->tool_id);
-        if ($tool && $tool->stok > 0) {
-            $tool->decrement('stok');
+        if ($tool && $tool->hasEnoughStock($loan->quantity)) {
+            $tool->reduceStock($loan->quantity);
         } else {
-            // Jika stok habis, batalkan approval
+            // Jika stok tidak mencukupi, batalkan approval
             $loan->update(['status' => 'pending']);
-            return back()->with('error', 'Stok alat habis, tidak dapat menyetujui peminjaman.');
+            $stokTersedia = $tool ? $tool->stok : 0;
+            return back()->with('error', "Stok tidak mencukupi! Sisa stok: {$stokTersedia}, Diminta: {$loan->quantity}");
         }
         ActivityLog::record('Setujui Peminjaman', 'Menyetujui peminjaman alat: ' . $loan->tool->nama_alat . ' oleh ' . $loan->user->name);
         return back()->with('success', 'Peminjaman disetujui.');
@@ -107,13 +108,12 @@ class PetugasController extends Controller
         // Kembalikan stok alat
         $tool = Tool::find($loan->tool_id);
         if ($tool) {
-            $tool->increment('stok');
+            $tool->increment('stok', $loan->quantity);
         }
-
         // Catat aktivitas
         if (class_exists(ActivityLog::class)) {
             ActivityLog::record(
-                'Pengembalian (Petugas)',
+                'Create Pengembalian (Petugas)',
                 'Memproses pengembalian alat: ' . ($loan->tool->nama_alat ?? '-') . ' dengan denda Rp ' . number_format($denda, 0, ',', '.')
             );
         }

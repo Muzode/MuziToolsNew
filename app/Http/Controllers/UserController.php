@@ -47,7 +47,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password), // Enkripsi password
             'role' => $request->role,
         ]);
-        ActivityLog::record('Tambah User', 'Menambahkan user baru: ' . $user->name . ' (' . $user->role . ')');
+        ActivityLog::record('Create User', 'Menambahkan user baru: ' . $user->name . ' (' . $user->role . ')');
         return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan.');
     }
     /**
@@ -94,7 +94,7 @@ class UserController extends Controller
         }
         $nama = $user->name;
         $user->delete();
-        ActivityLog::record('Hapus User', 'Menghapus user: ' . $nama);
+        ActivityLog::record('Delete User', 'Menghapus user: ' . $nama);
         return redirect()->route('users.index')->with('success', 'User berhasil dihapus.');
     }
 }

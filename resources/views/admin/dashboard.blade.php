@@ -2,14 +2,14 @@
 @section('content')
 <div class="">
     <div class="m-5 text-center">
-        <h3 class="fs-1">MUZITOOLS</h3>
+        <h3 class="fs-1">TOOLZ</h3>
         <p class="text-muted">Selamat datang, {{ auth()->user()->name }}!</p>
     </div>
     <div class="row mb-4">
         <div class="col-md-4">
             <div class="card mb-3 h-100">
                 <div class="card-header">Total Pengguna</div>
-                <div class="card-body">
+                <div class="card-body text-dark">
                     <h2 class="card-title">{{ $totalUser }}</h2>
                     <p class="card-text">User Terdaftar</p>
                 </div>

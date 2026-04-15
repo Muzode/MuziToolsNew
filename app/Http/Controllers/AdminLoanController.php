@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Loan;
 use App\Models\User;
 use App\Models\Tool;
-Use App\Models\ActivityLog;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,20 +35,22 @@ class AdminLoanController extends Controller
         $request->validate([
             'user_id' => 'required',
             'tool_id' => 'required',
+            'quantity' => 'required|integer|min:1',
             'tanggal_pinjam' => 'required|date',
             'tanggal_kembali_rencana' => 'required|date|after_or_equal:tanggal_pinjam',
             'status' => 'required'
         ]);
-        
+
         // cek stok jika status langsung disetujui
         $tool = Tool::findOrFail($request->tool_id);
-        if($request->status == 'disetujui' && $tool->stok < 1) {
-            return back()->with(['error' => 'Stok alat kosong, tidak bisa set status disetujui.']);
+        if ($request->status == 'disetujui' && $tool->stok < $request->quantity) {
+            return back()->with('error', 'Stok tidak mencukupi! Sisa stok: ' . $tool->stok . ', Diminta: ' . $request->quantity);
         }
 
-        Loan::create([
+        $loan = Loan::create([
             'user_id' => $request->user_id,
             'tool_id' => $request->tool_id,
+            'quantity' => $request->quantity,
             'tanggal_pinjam' => $request->tanggal_pinjam,
             'tanggal_kembali_rencana' => $request->tanggal_kembali_rencana,
             'status' => $request->status,
@@ -57,10 +59,10 @@ class AdminLoanController extends Controller
 
         // kurangi stok jika admin langsung set disetujui
         if ($request->status == 'disetujui') {
-            $tool->decrement('stok');
+            $tool->decrement('stok', $request->quantity);
         }
-
-        ActivityLog::record('Create Loan', 'Admin membuat data pinjaman baru');
+        
+        ActivityLog::record('Create Loan', 'Admin membuat data pinjaman baru untuk alat: ' . $tool->nama_alat . ' (' . $request->quantity . ' pcs)');
 
         return redirect()->route('admin.loans.index')->with('success', 'Data pinjaman berhasil ditambahkan.');
     }
@@ -78,36 +80,100 @@ class AdminLoanController extends Controller
     // update data (simpan perubahan)
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'user_id' => 'required',
+            'tool_id' => 'required',
+            'quantity' => 'required|integer|min:1',
+            'tanggal_pinjam' => 'required|date',
+            'tanggal_kembali_rencana' => 'required|date|after_or_equal:tanggal_pinjam',
+            'status' => 'required'
+        ]);
+
         $loan = Loan::findOrFail($id);
         $tool = Tool::findOrFail($request->tool_id);
-
-        // Logika perubahan stok berdasarkan perubahan status
-        // 1. jika sebelumnya pending -> diubah menjadi disetujui (stok berkurang)
-        if ($loan->status == 'pending' && $request->status == 'disetujui') {
-            $tool->decrement('stok');
+        
+        // Simpan nilai lama untuk perbandingan
+        $statusLama = $loan->status;
+        $quantityLama = $loan->quantity;
+        $toolIdLama = $loan->tool_id;
+        
+        // Jika alat berubah, handle stok alat lama
+        if ($toolIdLama != $request->tool_id) {
+            $toolLama = Tool::find($toolIdLama);
+            
+            // Kembalikan stok alat lama jika statusnya disetujui
+            if ($statusLama == 'disetujui') {
+                $toolLama->increment('stok', $quantityLama);
+            }
+            
+            // Cek stok alat baru
+            if ($request->status == 'disetujui' && $tool->stok < $request->quantity) {
+                return back()->with('error', 'Stok alat baru tidak mencukupi! Sisa stok: ' . $tool->stok . ', Diminta: ' . $request->quantity);
+            }
+            
+            // Kurangi stok alat baru jika status disetujui
+            if ($request->status == 'disetujui') {
+                $tool->decrement('stok', $request->quantity);
+            }
+        } 
+        else {
+            // Alat sama, handle perubahan status dan quantity
+            
+            // 1. Jika dari disetujui menjadi status lain, kembalikan stok sesuai quantity lama
+            if ($statusLama == 'disetujui' && $request->status != 'disetujui') {
+                $tool->increment('stok', $quantityLama);
+            }
+            
+            // 2. Jika dari status lain menjadi disetujui, kurangi stok sesuai quantity baru
+            elseif ($statusLama != 'disetujui' && $request->status == 'disetujui') {
+                // Cek stok mencukupi
+                if ($tool->stok < $request->quantity) {
+                    return back()->with('error', 'Stok tidak mencukupi! Sisa stok: ' . $tool->stok . ', Diminta: ' . $request->quantity);
+                }
+                $tool->decrement('stok', $request->quantity);
+            }
+            
+            // 3. Jika tetap disetujui tapi quantity berubah
+            elseif ($statusLama == 'disetujui' && $request->status == 'disetujui') {
+                if ($quantityLama != $request->quantity) {
+                    // Hitung selisih quantity
+                    $selisih = $request->quantity - $quantityLama;
+                    
+                    if ($selisih > 0) {
+                        // Quantity bertambah, cek stok dan kurangi
+                        if ($tool->stok < $selisih) {
+                            return back()->with('error', 'Stok tidak mencukupi untuk penambahan quantity! Sisa stok: ' . $tool->stok . ', Butuh tambahan: ' . $selisih);
+                        }
+                        $tool->decrement('stok', $selisih);
+                    } elseif ($selisih < 0) {
+                        // Quantity berkurang, kembalikan stok
+                        $tool->increment('stok', abs($selisih));
+                    }
+                }
+            }
+            
+            // 4. Jika dari kembali/ditolak/pending menjadi kembali/ditolak/pending (tidak ada perubahan stok)
         }
-
-        //2. jika sebelumnya disetujui -> diubah menjadi kembali (stok bertambah)
-        elseif ($loan->status == 'disetujui' && $request->status == 'kembali') {
-            $tool->increment('stok');
-            $request->merge(['tanggal_kembali_aktual' => now()]);
-        }
-
-        //3. jika sebelumnya disetujui -> diubah jadi pending/batal (stok bertambah/koreksi)
-        elseif ($loan->status == 'disetujui' && $request->status == 'pending') {
-            $tool->increment('stok');
-        }
-
+        
+        // Update data loan
         $loan->update([
             'user_id' => $request->user_id,
             'tool_id' => $request->tool_id,
+            'quantity' => $request->quantity,
             'tanggal_pinjam' => $request->tanggal_pinjam,
             'tanggal_kembali_rencana' => $request->tanggal_kembali_rencana,
             'status' => $request->status,
             'tanggal_kembali_aktual' => $request->tanggal_kembali_aktual ?? $loan->tanggal_kembali_aktual
         ]);
 
-        ActivityLog::record('Update Loan', 'Admin memperbarui data pinjaman ID: ' . $loan->id);
+        // Catat aktivitas dengan detail
+        $activityDesc = "Memperbarui data pinjaman ID: {$loan->id}. ";
+        $activityDesc .= "Status: {$statusLama} → {$request->status}, ";
+        $activityDesc .= "Quantity: {$quantityLama} → {$request->quantity}, ";
+        $activityDesc .= "Alat: " . ($toolIdLama != $request->tool_id ? "berubah" : "tetap");
+        
+        ActivityLog::record('Update Loan', $activityDesc);
+        
         return redirect()->route('admin.loans.index')->with('success', 'Data berhasil diperbarui.');
     }
 
@@ -116,13 +182,14 @@ class AdminLoanController extends Controller
     {
         $loan = Loan::findOrFail($id);
 
-        //jika menghapus data yang statusnya masih disetujui (sedang dipinjam), kembalikan stok 
-        if ($loan->status == 'disetujui'){
-            $loan->tool->increment('stok');
+        // Jika menghapus data yang statusnya masih disetujui (sedang dipinjam), kembalikan stok sesuai quantity
+        if ($loan->status == 'disetujui') {
+            $loan->tool->increment('stok', $loan->quantity);
         }
 
         $loan->delete();
-        ActivityLog::record('Delete Loan', 'Admin menghapus data pinjaman ID: ' . $loan->id);
+        ActivityLog::record('Delete Loan', 'Admin menghapus data pinjaman ID: ' . $loan->id . ' (' . $loan->quantity . ' pcs)');
+        
         return redirect()->route('admin.loans.index')->with('success', 'Data berhasil dihapus.');
     }
 }

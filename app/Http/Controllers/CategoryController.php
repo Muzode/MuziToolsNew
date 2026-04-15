@@ -36,7 +36,7 @@ class CategoryController extends Controller
         Category::create([
             'nama_kategori' => $request->nama_kategori
         ]);
-        ActivityLog::record('Tambah Kategori', 'Menambah kategori: ' . $request->nama_kategori);
+        ActivityLog::record('Create Kategori', 'Menambah kategori: ' . $request->nama_kategori);
         return redirect()->route('categories.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
     /**
@@ -73,7 +73,7 @@ class CategoryController extends Controller
         }
         $nama = $category->nama_kategori;
         $category->delete();
-        ActivityLog::record('Hapus Kategori', 'Menghapus kategori: ' . $nama);
+        ActivityLog::record('Delete Kategori', 'Menghapus kategori: ' . $nama);
         return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus.');
     }
 }

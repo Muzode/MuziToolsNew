@@ -57,7 +57,7 @@ class ToolController extends Controller
             'gambar' => $gambarPath
         ]);
         // 4. Catat Log
-        ActivityLog::record('Tambah Alat', 'Menambahkan alat baru: ' . $request->nama_alat);
+        ActivityLog::record('Create Alat', 'Menambahkan alat baru: ' . $request->nama_alat);
         return redirect()->route('tools.index')->with('success', 'Alat berhasil ditambahkan.');
     }
     /**
@@ -105,7 +105,7 @@ class ToolController extends Controller
         }
         $namaAlat = $tool->nama_alat;
         $tool->delete();
-        ActivityLog::record('Hapus Alat', 'Menghapus alat: ' . $namaAlat);
+        ActivityLog::record('Delete Alat', 'Menghapus alat: ' . $namaAlat);
         return redirect()->route('tools.index')->with('success', 'Alat berhasil dihapus.');
     }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <h3 class="text-dark">Daftar Alat Tersedia</h3>
-        <div class="mb-3">
+    <div class="mb-3">
         <form action="{{ url('/peminjam/dashboard') }}" method="GET" class="d-flex gap-2" style="max-width: 400px;">
             <input type="text" name="search" class="form-control" placeholder="Cari alat atau kategori..."
                 value="{{ request('search') }}">
@@ -34,10 +34,18 @@
                             <form action="{{ url('/peminjam/ajukan') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="tool_id" value="{{ $tool->id }}">
-                                <div class="mb-2">
-                                    <label class="small">Tgl Rencana Kembali</label>
-                                    <input type="date" name="tanggal_kembali" class="form-control form-control-sm"
-                                        required min="{{ date('Y-m-d') }}">
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <label>Jumlah Pinjam</label>
+                                        <input type="number" name="quantity" class="form-control" min="1"
+                                            max="{{ $tool->stok }}" value="1" required>
+                                        <small class="text-muted">Maksimal stok: {{ $tool->stok }}</small>
+                                    </div>
+                                    <div class="col">
+                                        <label class="small">Tgl Rencana Kembali</label>
+                                        <input type="date" name="tanggal_kembali" class="form-control form-control-sm"
+                                            required min="{{ date('Y-m-d') }}">
+                                    </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100">Pinjam Alat</button>
                             </form>

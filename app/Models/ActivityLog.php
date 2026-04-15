@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
+
 class ActivityLog extends Model
 {
     protected $guarded = [];
@@ -15,10 +16,12 @@ class ActivityLog extends Model
     // Fungsi Helper
     public static function record($action, $desc = null)
     {
-        self::create([
-            'user_id' => Auth::id(),
-            'action' => $action,
-            'description' => $desc
-        ]);
+        if (Auth::check()) {
+            ActivityLog::create([
+                'user_id' => Auth::id(),
+                'action' => $action,
+                'description' => $desc
+            ]);
+        }
     }
 }

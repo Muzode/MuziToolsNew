@@ -95,7 +95,7 @@ class AdminReturnController extends Controller
 
         // Catat aktivitas
         ActivityLog::record(
-            'Pengembalian (Admin)',
+            'Create Pengembalian (Admin)',
             'Memproses pengembalian alat: ' . ($loan->tool->nama_alat ?? '-') . ' dengan denda Rp ' . number_format($denda, 0, ',', '.')
         );
 

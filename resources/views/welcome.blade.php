@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Peminjaman Alat | SIPINJAM</title>
+    <title>Sistem Peminjaman Alat | TOOLZ</title>
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -302,7 +302,7 @@
     <!-- Hero Section -->
     <div class="hero-section text-center">
         <div class="container">
-            <h1 class="display-4 fw-bold fade-in-up">MuziTools</h1>
+            <h1 class="display-4 fw-bold fade-in-up">TOOLZ</h1>
             <p class="lead mb-4 text-muted fade-in-up" style="animation-delay: 0.1s;">
                 Sistem manajemen peminjaman alat sarana sekolah yang terintegrasi,
                 cepat, dan transparan.

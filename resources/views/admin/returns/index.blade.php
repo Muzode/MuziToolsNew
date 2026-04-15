@@ -27,7 +27,10 @@
                         
                             <td>{{ $returns->firstItem() + $key }}</td>
                             <td>{{ $r->user->name }}</td>
-                            <td>{{ $r->tool->nama_alat }}</td>
+                            <td>{{ $r->tool->nama_alat }}
+                                <br>
+                                <small class="badge bg-primary">Jumlah: {{ $r->quantity }}</small>
+                            </td>
                             <td>{{ $r->tanggal_pinjam->format('d-m-Y')  }}</td>
                             <td>
                                 {{ $r->tanggal_kembali_aktual->format('d-m-Y')  }}

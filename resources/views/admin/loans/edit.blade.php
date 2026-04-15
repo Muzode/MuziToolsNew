@@ -30,13 +30,17 @@
                     <div class="col">
                         <label>Tgl Pinjam</label>
 
-                        <input type="date" name="tanggal_pinjam" class="form-control"
-                            value="{{ date('Y-m-d') }}">
+                        <input type="date" name="tanggal_pinjam" class="form-control" value="{{ date('Y-m-d') }}">
                     </div>
                     <div class="col">
                         <label>Rencana Kembali</label>
                         <input type="date" name="tanggal_kembali_rencana" class="form-control"
                             value="{{ date('Y-m-d') }}">
+                    </div>
+                    <div class="col">
+                        <label>Jumlah</label>
+                        <input type="number" name="quantity" class="form-control form-control-sm" min="1"
+                            max="{{ $tool->stok }}" value="1" required>
                     </div>
                 </div>
                 <div class="mb-3">

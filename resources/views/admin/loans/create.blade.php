@@ -33,6 +33,12 @@
                         <label>Rencana Kembali</label>
                         <input type="date" name="tanggal_kembali_rencana" class="form-control" required>
                     </div>
+                    <div class="col">
+                        <label>Jumlah</label>
+                        <input type="number" name="quantity" class="form-control form-control-sm" min="1"
+                            max="{{ $tool->stok }}" value="1" required>
+                    </div>
+
                 </div>
                 <div class="mb-3">
                     <label>Status Awal</label>

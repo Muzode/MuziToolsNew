@@ -22,7 +22,10 @@
                                 @forelse($loans as $loan)
                                     <tr>
                                         <td>{{ $loan->user->name }}</td>
-                                        <td>{{ $loan->tool->nama_alat }}</td>
+                                        <td>{{ $loan->tool->nama_alat }}
+                                            <br>
+                                            <small class="badge bg-primary">Jumlah: {{ $loan->quantity }}</small>
+                                        </td>
                                         <td>{{ $loan->tanggal_pinjam }}</td>
                                         <td>{{ $loan->tanggal_kembali_rencana }}</td>
                                         <td>
@@ -72,7 +75,10 @@
                                 @forelse($activeLoans as $active)
                                     <tr id="loan-row-{{ $active->id }}">
                                         <td>{{ $active->user->name }}</td>
-                                        <td>{{ $active->tool->nama_alat }}</td>
+                                        <td>{{ $active->tool->nama_alat }}
+                                            <br>
+                                            <small class="badge bg-primary">Jumlah: {{ $active->quantity }}</small>
+                                        </td>
                                         <td>
                                             @if ($active->status == 'diajukan')
                                                 <span class="badge bg-primary">Konfirmasi</span>
@@ -146,7 +152,10 @@
                                 @forelse($sudahDikembalikan as $sudah)
                                     <tr>
                                         <td>{{ $sudah->user->name }}</td>
-                                        <td>{{ $sudah->tool->nama_alat }}</td>
+                                        <td>{{ $sudah->tool->nama_alat }}
+                                            <br>
+                                            <small class="badge bg-primary">Jumlah: {{ $sudah->quantity }}</small>
+                                        </td>
                                         <td><span class="badge bg-success">Sudah Kembali</span></td>
                                         <td>{{ $sudah->tanggal_kembali_aktual ? $sudah->tanggal_kembali_aktual->format('d-m-Y') : '-' }}
                                         </td>

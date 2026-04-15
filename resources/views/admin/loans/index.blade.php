@@ -22,16 +22,22 @@
                         <tr>
                             <td>{{ $loans->firstItem() + $key }}</td>
                             <td>{{ $loan->user->name }}</td>
-                            <td>{{ $loan->tool->nama_alat }}</td>
+                            <td>{{ $loan->tool->nama_alat }}
+                                <br>
+                                <small class="badge bg-primary">Jumlah: {{ $loan->quantity }}</small>
+                            </td>
                             <td>
-                                {{ $loan->tanggal_pinjam->format('d-m-Y')  }} <br>
-                                <small class="text-muted">Kembali: {{ $loan->tanggal_kembali_rencana->format('d-m-Y') }}</small>
+                                {{ $loan->tanggal_pinjam->format('d-m-Y') }} <br>
+                                <small class="text-muted">Kembali:
+                                    {{ $loan->tanggal_kembali_rencana->format('d-m-Y') }}</small>
                             </td>
                             <td>
                                 @if ($loan->status == 'pending')
                                     <span class="badge bg-warning text-dark">Pending</span>
                                 @elseif($loan->status == 'disetujui')
                                     <span class="badge bg-primary">Sedang Dipinjam</span>
+                                @elseif($loan->status == 'diajukan')
+                                    <span class="badge bg-primary">Konfirmasi</span>
                                 @elseif($loan->status == 'kembali')
                                     <span class="badge bg-success">Sudah Kembali</span>
                                 @elseif($loan->status == 'ditolak')

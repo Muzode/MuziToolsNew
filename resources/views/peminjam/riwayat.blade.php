@@ -18,9 +18,13 @@
                 <tbody>
                     @forelse($loans as $loan)
                         <tr>
-                            <td>{{ $loan->tool->nama_alat }}</td>
-                            <td>{{ $loan->tanggal_pinjam }}</td>
-                            <td>{{ $loan->tanggal_kembali_rencana }}</td>
+                            <td>
+                                {{ $loan->tool->nama_alat }}
+                                <br>
+                                <small class="badge bg-primary">Jumlah: {{ $loan->quantity }}</small>
+                            </td>
+                            <td>{{ $loan->tanggal_pinjam->format('d-m-Y') }}</td>
+                            <td>{{ $loan->tanggal_kembali_rencana->format('d-m-Y') }}</td>
                             <td>
                                 @if ($loan->status == 'pending')
                                     <span class="badge bg-warning text-dark">Menunggu Persetujuan</span>
@@ -61,7 +65,7 @@
                             @if ($loan->status == 'disetujui')
                                 <small class="text-muted">Harap kembalikan ke petugas sebelum tanggal rencana.</small>
                             @elseif($loan->status == 'kembali')
-                                <small class="text-success">Diterima tanggal {{ $loan->tanggal_kembali_aktual }}</small>
+                                <small class="text-success">Diterima tanggal {{ $loan->tanggal_kembali_aktual->format('d-m-Y') }}</small>
                             @endif
                         </td>
                     </tr>

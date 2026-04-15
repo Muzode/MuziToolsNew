@@ -15,4 +15,15 @@ class Tool extends Model
     {
         return $this->hasMany(Loan::class);
     }
+    // Kurangi stok berdasarkan quantity
+    public function reduceStock($quantity)
+    {
+        $this->decrement('stok', $quantity);
+    }
+
+    // Cek kecukupan stok
+    public function hasEnoughStock($quantity)
+    {
+        return $this->stok >= $quantity;
+    }
 }

@@ -34,7 +34,7 @@
                                         <label class="form-label">Filter by Action</label>
                                         <select name="action" class="form-control">
                                             <option value="">All Actions</option>
-                                            <option value="create" {{ request('action') == 'create' ? 'selected' : '' }}>
+                                            <option value="tambah" {{ request('action') == 'create' ? 'selected' : '' }}>
                                                 Create</option>
                                             <option value="update" {{ request('action') == 'update' ? 'selected' : '' }}>
                                                 Update</option>
