@@ -2,7 +2,7 @@
 @section('content')
 <div class="">
     <div class="m-5 text-center">
-        <h3 class="fs-1">TOOLZ</h3>
+        <h3 class="fs-1 text-dark">TOOLZ</h3>
         <p class="text-muted">Selamat datang, {{ auth()->user()->name }}!</p>
     </div>
     <div class="row mb-4">

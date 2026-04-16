@@ -1,4 +1,5 @@
 <?php
+// app/Models/Loan.php
 
 namespace App\Models;
 
@@ -21,13 +22,14 @@ class Loan extends Model
         'denda_per_hari',
         'denda',
         'keterangan_kondisi',
-        'gambar_kondisi' // Tambah ini
+        'gambar_kondisi'
     ];
 
     protected $casts = [
-        'tanggal_pinjam'        => 'datetime',
+        'tanggal_pinjam' => 'datetime',
         'tanggal_kembali_rencana' => 'datetime',
         'tanggal_kembali_aktual' => 'datetime',
+        'denda' => 'decimal:2'
     ];
 
     public function user()
@@ -45,27 +47,67 @@ class Loan extends Model
         return $this->belongsTo(User::class, 'petugas_id');
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     /**
-     * Hitung denda keterlambatan.
-     * Denda Rp 5.000 per hari jika tanggal_kembali_aktual > tanggal_kembali_rencana.
+     * Hitung denda keterlambatan
+     * Denda Rp 5.000 per hari jika tanggal_kembali_aktual > tanggal_kembali_rencana
      */
     public function calculateDenda()
     {
-        // Jika tanggal aktual belum diisi, belum bisa hitung denda
         if (!$this->tanggal_kembali_aktual || !$this->tanggal_kembali_rencana) {
             return 0;
         }
 
-        // Jika tanggal aktual <= rencana, tidak telat
         if ($this->tanggal_kembali_aktual->lte($this->tanggal_kembali_rencana)) {
             return 0;
         }
 
-        // Hitung selisih jam (pembulatan ke atas, atau tepat per jam)
         $diffHours = $this->tanggal_kembali_rencana->diffInHours($this->tanggal_kembali_aktual);
         $hariTelat = (int) ceil($diffHours / 24);
+        $dendaPerHari = $this->denda_per_hari ?? 5000;
 
-        // diffInDays sudah positif karena aktual > rencana
-        return $hariTelat * 5000;
+        return $hariTelat * $dendaPerHari;
+    }
+
+    /**
+     * Update denda ke database
+     */
+    public function updateDenda()
+    {
+        $denda = $this->calculateDenda();
+        $this->update(['denda' => $denda]);
+        return $denda;
+    }
+
+    /**
+     * Cek apakah denda sudah dibayar
+     */
+    public function isDendaPaid()
+    {
+        return $this->payments()
+            ->where('payment_type', 'denda')
+            ->whereIn('status', ['settlement', 'capture'])
+            ->exists();
+    }
+
+    /**
+     * Get denda yang belum dibayar
+     */
+    public function getUnpaidDendaAttribute()
+    {
+        if ($this->isDendaPaid()) {
+            return 0;
+        }
+
+        $paidAmount = $this->payments()
+            ->where('payment_type', 'denda')
+            ->whereIn('status', ['settlement', 'capture'])
+            ->sum('amount');
+
+        return max(0, ($this->denda ?? 0) - $paidAmount);
     }
 }

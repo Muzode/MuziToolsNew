@@ -3,23 +3,23 @@
 /* Custom Color Variables - Tema Biru Kalem dengan Aksen Oranye */
 :root {
     /* Warna Biru Kalem (tidak terlalu cerah) */
-    --pastel-blue: #44619e; /* Biru kalem */
-    --soft-blue: #6c89c0; /* Biru lembut kalem */
-    --powder-blue: #a8cedf; /* Biru bubuk kalem */
-    --mist-blue: #bdd9e8; /* Biru kabut kalem */
-    --sky-pastel: #f6fcff; /* Langit kalem */
+    --pastel-blue: #44619e;
+    --soft-blue: #6c89c0;
+    --powder-blue: #a8cedf;
+    --mist-blue: #bdd9e8;
+    --sky-pastel: #f6fcff;
 
     /* Warna Laut Kalem */
-    --seafoam-pastel: #739fc0; /* Buih laut kalem */
-    --mint-pastel: #95ced8; /* Mint kalem */
-    --aqua-pastel: #8cbcd4; /* Aqua kalem */
+    --seafoam-pastel: #739fc0;
+    --mint-pastel: #95ced8;
+    --aqua-pastel: #8cbcd4;
 
     /* Aksen Oranye (tidak terlalu mencolok) */
-    --coral-pastel: #d45c70; /* Oranye coral kalem */
-    --peach-pastel: #e07083; /* Oranye peach kalem */
-    --sand-pastel: #dc866c; /* Oranye pasir kalem */
-    --yellow-pastel: #e8c27c; /* Oranye kekuningan kalem */
-    --sage-pastel: #a8bcac; /* Sage kalem */
+    --coral-pastel: #d45c70;
+    --peach-pastel: #e07083;
+    --sand-pastel: #dc866c;
+    --yellow-pastel: #e8c27c;
+    --sage-pastel: #a8bcac;
 
     /* Gradients */
     --gradient-pastel: linear-gradient(
@@ -43,15 +43,146 @@
         var(--sand-pastel) 0%,
         var(--yellow-pastel) 100%
     );
+
+    /* ================================================
+       VARIABEL WARNA TEKS DINAMIS
+       ================================================ */
+
+    /* Warna teks default untuk background terang */
+    --text-on-light: #2c3e50; /* Teks gelap untuk background terang */
+    --text-muted-on-light: #5a7a8a; /* Teks abu-abu untuk background terang */
+
+    /* Warna teks default untuk background gelap */
+    --text-on-dark: #ffffff; /* Teks putih untuk background gelap */
+    --text-muted-on-dark: #f0f3f5; /* Teks putih lembut untuk background gelap */
+
+    /* Warna teks untuk komponen dengan background biru/gelap */
+    --text-primary-on-dark: #ffffff;
+    --text-secondary-on-light: #2c3e50;
+
+    /* Warna default yang akan di-override oleh class analisis */
+    --dynamic-text-color: var(--text-on-light);
+    --dynamic-text-muted: var(--text-muted-on-light);
 }
 
-/* Global Styles */
+/* ================================================
+   ANALISIS KONTRAK WARNA (LUMINANCE-BASED)
+   ================================================ */
+
+/* 
+   FUNGSI ANALISIS:
+   Setiap class background akan mengatur warna teksnya sendiri
+   berdasarkan tingkat kecerahan background (luminance)
+*/
+
+/* Utility class untuk kontras otomatis */
+.auto-contrast {
+    /* Fallback: hitung kontras via CSS (pendekatan modern) */
+    color: var(--text-on-light);
+}
+
+/* Class untuk background gelap (akan mengatur teks terang) */
+.bg-dark-auto {
+    background-color: #2c3e50;
+    color: var(--text-on-dark);
+}
+
+.bg-dark-auto .text-muted,
+.bg-dark-auto .muted {
+    color: var(--text-muted-on-dark) !important;
+}
+
+/* Class untuk background terang (akan mengatur teks gelap) */
+.bg-light-auto {
+    background-color: #f8f9fa;
+    color: var(--text-on-light);
+}
+
+/* 
+   ANALISIS KHUSUS UNTUK MASING-MASING WARNA BACKGROUND
+   Berdasarkan luminance (kecerahan) warna yang digunakan
+*/
+
+/* --- BACKGROUND DENGAN WARNA GELAP (Teks akan otomatis jadi putih/terang) --- */
+
+/* Warna biru kalem memiliki luminance rendah -> teks putih */
+.bg-primary,
+.card-header,
+.navbar,
+.badge.bg-primary,
+.btn-primary {
+    color: var(--text-on-dark) !important;
+}
+
+/* Warna coral/oranye gelap */
+.bg-danger,
+.btn-danger,
+.badge.bg-danger,
+.alert-danger {
+    color: var(--text-on-dark) !important;
+}
+
+/* Warna sand/yellow (sedang ke gelap) - tetap pakai teks gelap karena cukup terang */
+.bg-warning,
+.btn-warning,
+.badge.bg-warning,
+.alert-warning {
+    color: var(--text-on-light) !important;
+}
+
+/* Gradient biru (cenderung gelap) */
+[class*="gradient"]:not(.bg-warning):not(.bg-success) {
+    color: var(--text-on-dark) !important;
+}
+
+/* --- BACKGROUND DENGAN WARNA TERANG (Teks akan otomatis jadi gelap) --- */
+
+/* Powder blue, mist blue, sky pastel (terang) */
+.bg-secondary,
+.bg-success,
+.btn-success,
+.badge.bg-success,
+.alert-success,
+.bg-info,
+.btn-info,
+.badge.bg-info {
+    color: var(--text-on-light) !important;
+}
+
+/* Tabel dengan background transparan/terang */
+.table-transparent tbody td {
+    color: var(--text-muted-on-light);
+}
+
+/* Card body (background terang) */
+.card-body {
+    color: var(--text-on-light);
+}
+
+/* Stat card (background terang) */
+.stat-card {
+    color: var(--text-on-light);
+}
+
+.stat-card h3 {
+    color: var(--text-on-light);
+}
+
+.stat-card p {
+    color: var(--text-muted-on-light);
+}
+
+/* ================================================
+   IMPLEMENTASI VARIABEL DINAMIS
+   ================================================ */
+
+/* Global Styles - menggunakan variabel dinamis */
 body {
     background: linear-gradient(135deg, #eef5f8 0%, #e4eff5 50%, #dceaf2 100%);
     font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     min-height: 100vh;
     position: relative;
-    color: #5a7a8a;
+    color: var(--text-on-light); /* Teks gelap untuk background terang */
 }
 
 /* Efek Awan Lembut */
@@ -78,60 +209,60 @@ body::before {
     z-index: 1;
 }
 
-/* bg-primary - pakai warna biru kalem */
+/* bg-primary - background gelap -> teks putih */
 .bg-primary {
     background: linear-gradient(
         135deg,
         var(--pastel-blue) 0%,
         var(--aqua-pastel) 100%
     ) !important;
-    color: var(--sky-pastel) !important;
+    color: var(--text-on-dark) !important;
 }
 
-/* bg-secondary - pakai powder blue */
+/* bg-secondary - background terang -> teks gelap */
 .bg-secondary {
     background: linear-gradient(
         135deg,
         var(--powder-blue) 0%,
         var(--mist-blue) 100%
     ) !important;
-    color: #4a6a7a !important;
+    color: var(--text-on-light) !important;
 }
 
-/* bg-success - pakai seafoam + sage */
+/* bg-success - background cukup terang -> teks gelap */
 .bg-success {
     background: linear-gradient(
         135deg,
         var(--seafoam-pastel) 0%,
         var(--sage-pastel) 100%
     ) !important;
-    color: #4a6a5a !important;
+    color: var(--text-on-light) !important;
 }
 
-/* bg-danger - pakai coral/oranye kalem */
+/* bg-danger - background gelap -> teks putih */
 .bg-danger {
     background: linear-gradient(
         135deg,
         var(--coral-pastel) 0%,
         #dc9c6c 100%
     ) !important;
-    color: var(--sky-pastel) !important;
+    color: var(--text-on-dark) !important;
 }
 
-/* bg-warning - pakai sand + yellow */
+/* bg-warning - background medium -> teks gelap (karena luminance cukup tinggi) */
 .bg-warning {
     background: var(--gradient-sand) !important;
-    color: var(--sky-pastel) !important;
+    color: var(--text-on-light) !important;
 }
 
-/* bg-info - pakai aqua + pastel blue */
+/* bg-info - background gelap -> teks putih */
 .bg-info {
     background: linear-gradient(
         135deg,
         var(--aqua-pastel) 0%,
         var(--pastel-blue) 100%
     ) !important;
-    color: var(--sky-pastel) !important;
+    color: var(--text-on-dark) !important;
 }
 
 /* Card Styles - Soft & Elegant */
@@ -144,6 +275,7 @@ body::before {
     transition: all 0.3s ease;
     overflow: hidden;
     margin-bottom: 25px;
+    color: var(--text-on-light); /* Teks gelap untuk card terang */
 }
 
 .card:hover {
@@ -154,7 +286,7 @@ body::before {
 
 .card-header {
     background: var(--gradient-pastel);
-    color: var(--sky-pastel);
+    color: var(--text-on-dark) !important; /* Background gelap -> teks putih */
     border: none;
     padding: 18px 24px;
     font-weight: 600;
@@ -165,7 +297,7 @@ body::before {
 
 .card-header.bg-warning {
     background: var(--gradient-sand) !important;
-    color: #6a5a4a;
+    color: var(--text-on-light) !important; /* Warning terang -> teks gelap */
 }
 
 .card-header.bg-info {
@@ -174,7 +306,7 @@ body::before {
         var(--aqua-pastel) 0%,
         var(--pastel-blue) 100%
     ) !important;
-    color: #5a7a8a;
+    color: var(--text-on-dark) !important; /* Background gelap -> teks putih */
 }
 
 .card-header.bg-success {
@@ -183,14 +315,15 @@ body::before {
         var(--seafoam-pastel) 0%,
         var(--sage-pastel) 100%
     ) !important;
-    color: #5a7a6a;
+    color: var(--text-on-light) !important; /* Success terang -> teks gelap */
 }
 
 .card-body {
     padding: 28px;
+    color: var(--text-on-light);
 }
 
-/* Button Styles - Soft & Elegant */
+/* Button Styles - teks disesuaikan dengan background */
 .btn {
     border-radius: 50px;
     padding: 8px 24px;
@@ -210,7 +343,7 @@ body::before {
         var(--pastel-blue) 0%,
         var(--aqua-pastel) 100%
     );
-    color: var(--sky-pastel);
+    color: var(--text-on-dark) !important; /* Background gelap -> teks putih */
     box-shadow: 0 2px 6px rgba(127, 180, 204, 0.3);
 }
 
@@ -222,7 +355,7 @@ body::before {
     );
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(212, 132, 92, 0.2);
-    color: var(--sky-pastel);
+    color: var(--text-on-dark) !important;
 }
 
 .btn-success {
@@ -231,35 +364,39 @@ body::before {
         var(--seafoam-pastel) 0%,
         var(--sage-pastel) 100%
     );
-    color: #4a6a5a;
+    color: var(
+        --text-on-light
+    ) !important; /* Background terang -> teks gelap */
 }
 
 .btn-success:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(156, 206, 192, 0.3);
-    color: #3a5a4a;
+    color: var(--text-on-light) !important;
 }
 
 .btn-warning {
     background: var(--gradient-sand);
-    color: #6a5a4a;
+    color: var(
+        --text-on-light
+    ) !important; /* Background medium-terang -> teks gelap */
 }
 
 .btn-warning:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(212, 132, 92, 0.25);
-    color: #5a4a3a;
+    color: var(--text-on-light) !important;
 }
 
 .btn-danger {
     background: linear-gradient(135deg, var(--coral-pastel) 0%, #dc9c6c 100%);
-    color: #6a4a3a;
+    color: var(--text-on-dark) !important; /* Background gelap -> teks putih */
 }
 
 .btn-danger:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(212, 132, 92, 0.3);
-    color: #5a3a2a;
+    color: var(--text-on-dark) !important;
 }
 
 .btn-info {
@@ -268,7 +405,7 @@ body::before {
         var(--aqua-pastel) 0%,
         var(--pastel-blue) 100%
     );
-    color: #4a6a7a;
+    color: var(--text-on-dark) !important; /* Background gelap -> teks putih */
 }
 
 .btn-info:hover {
@@ -303,7 +440,7 @@ body::before {
 
 .table-transparent thead th {
     background: transparent !important;
-    color: var(--sky-pastel) !important;
+    color: var(--text-on-dark) !important; /* Background gelap -> teks putih */
     font-weight: 600;
     padding: 16px;
     border-bottom: none;
@@ -319,7 +456,9 @@ body::before {
 
 .table-transparent tbody td {
     padding: 14px 16px;
-    color: #6a8a9a;
+    color: var(
+        --text-muted-on-light
+    ); /* Teks abu-abu gelap untuk keterbacaan */
     vertical-align: middle;
     font-size: 0.9rem;
 }
@@ -329,7 +468,7 @@ body::before {
     transform: scale(1.01);
 }
 
-/* Badge Styles - Soft */
+/* Badge Styles - teks dinamis */
 .badge {
     padding: 6px 14px;
     border-radius: 50px;
@@ -344,7 +483,7 @@ body::before {
         var(--pastel-blue) 0%,
         var(--aqua-pastel) 100%
     ) !important;
-    color: #4a6a7a;
+    color: var(--text-on-dark) !important; /* Background gelap -> teks putih */
 }
 
 .badge.bg-success {
@@ -353,12 +492,16 @@ body::before {
         var(--seafoam-pastel) 0%,
         var(--sage-pastel) 100%
     ) !important;
-    color: #4a6a5a;
+    color: var(
+        --text-on-light
+    ) !important; /* Background terang -> teks gelap */
 }
 
 .badge.bg-warning {
     background: var(--gradient-sand) !important;
-    color: #6a5a4a;
+    color: var(
+        --text-on-light
+    ) !important; /* Background terang -> teks gelap */
 }
 
 .badge.bg-danger {
@@ -367,7 +510,7 @@ body::before {
         var(--coral-pastel) 0%,
         #dc9c6c 100%
     ) !important;
-    color: #6a4a3a;
+    color: var(--text-on-dark) !important; /* Background gelap -> teks putih */
 }
 
 .badge.bg-info {
@@ -376,10 +519,10 @@ body::before {
         var(--aqua-pastel) 0%,
         var(--pastel-blue) 100%
     ) !important;
-    color: #4a6a7a;
+    color: var(--text-on-dark) !important; /* Background gelap -> teks putih */
 }
 
-/* Form Input Styles - Soft */
+/* Form Input Styles */
 .form-control {
     border-radius: 50px;
     border: 1px solid rgba(127, 180, 204, 0.4);
@@ -387,7 +530,7 @@ body::before {
     transition: all 0.3s ease;
     padding: 10px 18px;
     font-size: 0.9rem;
-    color: #5a7a8a;
+    color: var(--text-on-light); /* Teks gelap untuk input terang */
 }
 
 .form-control:focus {
@@ -395,17 +538,17 @@ body::before {
     box-shadow: 0 0 0 0.2rem rgba(212, 132, 92, 0.15);
     outline: none;
     background: white;
-    color: #4a6a7a;
+    color: var(--text-on-light);
 }
 
 .form-label {
     font-weight: 500;
-    color: #6a8a9a;
+    color: var(--text-muted-on-light);
     margin-bottom: 8px;
     font-size: 0.85rem;
 }
 
-/* Perbaikan Pagination - Ukuran Normal */
+/* Pagination - teks gelap untuk item terang */
 .pagination {
     display: flex;
     padding-left: 0;
@@ -429,7 +572,7 @@ body::before {
     height: 36px;
     font-size: 0.85rem;
     line-height: 1.25;
-    color: #6a8a9a;
+    color: var(--text-on-light); /* Teks gelap */
     background: rgba(255, 255, 255, 0.85);
     border: 1px solid rgba(127, 180, 204, 0.4);
     border-radius: 50px;
@@ -439,7 +582,9 @@ body::before {
 
 .pagination .page-link:hover {
     background: var(--coral-pastel);
-    color: #ffffff;
+    color: var(
+        --text-on-dark
+    ) !important; /* Hover background gelap -> teks putih */
     transform: translateY(-2px);
     border-color: transparent;
 }
@@ -450,31 +595,12 @@ body::before {
         var(--coral-pastel) 0%,
         var(--yellow-pastel) 100%
     );
-    color: #ffffff;
+    color: var(--text-on-dark) !important; /* Background gelap -> teks putih */
     border-color: transparent;
     box-shadow: 0 2px 8px rgba(212, 132, 92, 0.25);
 }
 
-.pagination .page-item.disabled .page-link {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-}
-
-/* Khusus untuk tombol Previous dan Next */
-.pagination .page-item:first-child .page-link,
-.pagination .page-item:last-child .page-link {
-    padding: 6px 14px;
-    font-size: 0.85rem;
-}
-
-.pagination .page-item:first-child .page-link i,
-.pagination .page-item:last-child .page-link i {
-    font-size: 12px;
-    margin: 0 2px;
-}
-
-/* Alert Styles - Soft */
+/* Alert Styles - teks dinamis */
 .alert {
     border-radius: 20px;
     border: none;
@@ -489,7 +615,9 @@ body::before {
         rgba(156, 206, 192, 0.95) 0%,
         rgba(170, 212, 198, 0.95) 100%
     );
-    color: #4a6a5a;
+    color: var(
+        --text-on-light
+    ) !important; /* Background terang -> teks gelap */
     border-left: 4px solid var(--seafoam-pastel);
 }
 
@@ -499,7 +627,7 @@ body::before {
         rgba(212, 132, 92, 0.95) 0%,
         rgba(220, 156, 108, 0.95) 100%
     );
-    color: #6a4a3a;
+    color: var(--text-on-dark) !important; /* Background gelap -> teks putih */
     border-left: 4px solid var(--coral-pastel);
 }
 
@@ -509,11 +637,13 @@ body::before {
         rgba(220, 156, 108, 0.95) 0%,
         rgba(232, 176, 124, 0.95) 100%
     );
-    color: #6a5a4a;
+    color: var(
+        --text-on-light
+    ) !important; /* Background terang -> teks gelap */
     border-left: 4px solid var(--yellow-pastel);
 }
 
-/* Navbar Styles - Soft */
+/* Navbar Styles - background gelap, teks putih */
 .navbar {
     background: var(--pastel-blue) !important;
     backdrop-filter: blur(12px);
@@ -523,7 +653,7 @@ body::before {
 
 .navbar-brand {
     font-weight: 600;
-    color: var(--sky-pastel) !important;
+    color: var(--text-on-dark) !important;
     font-size: 1.4rem;
     letter-spacing: -0.3px;
 }
@@ -534,7 +664,7 @@ body::before {
 }
 
 .navbar .nav-link {
-    color: var(--sky-pastel) !important;
+    color: var(--text-on-dark) !important;
     transition: all 0.3s ease;
     border-radius: 50px;
     margin: 0 5px;
@@ -546,14 +676,7 @@ body::before {
 .navbar .nav-link:hover {
     background: var(--soft-blue);
     transform: translateY(-1px);
-    color: var(--sky-pastel) !important;
-}
-
-.navbar .nav-link:focus,
-.navbar .nav-link:active {
-    outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(212, 132, 92, 0.25);
-    border-radius: 50px;
+    color: var(--text-on-dark) !important;
 }
 
 /* Modal Styles */
@@ -562,11 +685,12 @@ body::before {
     border: none;
     background: rgba(255, 255, 255, 0.98);
     overflow: hidden;
+    color: var(--text-on-light);
 }
 
 .modal-header {
     background: var(--gradient-pastel);
-    color: #5a7a8a;
+    color: var(--text-on-dark) !important; /* Background gelap -> teks putih */
     border: none;
     padding: 20px 24px;
 }
@@ -577,6 +701,7 @@ body::before {
 
 .modal-body {
     padding: 24px;
+    color: var(--text-on-light);
 }
 
 .modal-footer {
@@ -584,79 +709,16 @@ body::before {
     padding: 16px 24px;
 }
 
-/* Animations */
-@keyframes softFloat {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-5px);
-    }
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.fade-in-up {
-    animation: fadeInUp 0.5s ease-out;
-}
-
-/* Custom Scrollbar - Soft */
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: rgba(127, 180, 204, 0.2);
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(
-        135deg,
-        var(--coral-pastel) 0%,
-        var(--yellow-pastel) 100%
-    );
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--coral-pastel);
-}
-
-/* Footer */
+/* Footer - background cukup gelap, teks putih */
 footer {
     background: rgba(127, 180, 204, 0.9);
     backdrop-filter: blur(10px);
-    color: #5a7a8a;
+    color: var(--text-on-dark) !important;
     padding: 30px 0;
     margin-top: 60px;
 }
 
-/* Input Date Custom */
-input[type="date"] {
-    position: relative;
-}
-
-input[type="date"]::-webkit-calendar-picker-indicator {
-    background: var(--coral-pastel);
-    border-radius: 50px;
-    padding: 4px;
-    cursor: pointer;
-    opacity: 0.7;
-}
-
-/* Stat Cards */
+/* Stat Cards - background terang, teks gelap */
 .stat-card {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(10px);
@@ -665,6 +727,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     text-align: center;
     transition: all 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.5);
+    color: var(--text-on-light);
 }
 
 .stat-card:hover {
@@ -682,41 +745,43 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .stat-card h3 {
     font-size: 1.8rem;
     font-weight: 600;
-    color: #5a7a8a;
+    color: var(--text-on-light);
     margin: 10px 0;
 }
 
 .stat-card p {
-    color: #7a9aaa;
+    color: var(--text-muted-on-light);
     margin: 0;
     font-size: 0.85rem;
 }
 
-/* Text Colors */
+/* Text Colors - menggunakan variabel dinamis */
 .text-dark {
-    color: #4a6a7a !important;
+    color: var(--text-on-light) !important;
 }
+
 .text-muted {
-    color: #7a9aaa !important;
+    color: var(--text-muted-on-light) !important;
 }
 
 .text-primary {
     color: var(--coral-pastel) !important;
 }
 
-/* Dropdown */
+/* Dropdown - background terang, teks gelap */
 .dropdown-menu {
     background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(127, 180, 204, 0.4);
     border-radius: 20px;
     padding: 8px;
+    color: var(--text-on-light);
 }
 
 .dropdown-item {
     border-radius: 12px;
     padding: 8px 16px;
-    color: #5a7a8a;
+    color: var(--text-on-light);
 }
 
 .dropdown-item:hover {
@@ -725,66 +790,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         var(--coral-pastel) 0%,
         var(--yellow-pastel) 100%
     );
-    color: #ffffff;
+    color: var(
+        --text-on-dark
+    ) !important; /* Hover background gelap -> teks putih */
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .card-body {
-        padding: 20px;
-    }
-
-    .table-responsive {
-        border-radius: 20px;
-    }
-
-    .btn {
-        padding: 6px 18px;
-        font-size: 0.8rem;
-    }
-
-    .navbar-brand {
-        font-size: 1.2rem;
-    }
-}
-
-/* Karakter Melayang - Versi dengan Animasi */
-.floating-character {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 9999;
-    cursor: grab;
-    user-select: none;
-    animation: floatSlow 3s ease-in-out infinite;
-}
-
-.floating-character:active {
-    cursor: grabbing;
-    animation: none;
-}
-
-.floating-character img {
-    width: 200px;
-    height: 200px;
-    transition: transform 0.2s;
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
-    pointer-events: none;
-}
-
-@keyframes floatSlow {
-    0% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-15px);
-    }
-    100% {
-        transform: translateY(0px);
-    }
-}
-
-/* Bubble chat */
+/* Bubble chat - background putih, teks gelap */
 .bubble-chat {
     position: absolute;
     bottom: 210px;
@@ -801,6 +812,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     z-index: 9998;
     pointer-events: auto;
     border: 1px solid rgba(212, 132, 92, 0.2);
+    color: var(--text-on-light);
 }
 
 .bubble-chat.show {
@@ -838,20 +850,123 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     margin: 0;
     font-size: 13px;
     line-height: 1.5;
-    color: #5a7a8a;
+    color: var(--text-on-light);
     padding-right: 15px;
 }
 
-.floating-character:hover img {
-    transform: scale(1.05);
+/* ================================================
+   KESIMPULAN ANALISIS WARNA
+   ================================================
+   
+   ANALISIS LUMINANCE:
+   -------------------
+   Warna-warna yang dianggap GELAP (luminance < 0.5):
+   - --pastel-blue (#44619e) -> RGB(68,97,158) -> luminance ≈ 0.28 (GELAP)
+   - --coral-pastel (#d45c70) -> RGB(212,92,112) -> luminance ≈ 0.45 (GELAP)
+   - --sand-pastel (#dc866c) -> RGB(220,134,108) -> luminance ≈ 0.52 (TERANG)
+   - --seafoam-pastel (#739fc0) -> RGB(115,159,192) -> luminance ≈ 0.54 (TERANG)
+   - --sage-pastel (#a8bcac) -> RGB(168,188,172) -> luminance ≈ 0.72 (TERANG)
+   
+   IMPLEMENTASI:
+   -------------
+   1. Background gelap (luminance < 0.5) menggunakan:
+      - color: var(--text-on-dark)  (#ffffff)
+      - .text-muted: var(--text-muted-on-dark) (#f0f3f5)
+   
+   2. Background terang (luminance >= 0.5) menggunakan:
+      - color: var(--text-on-light)  (#2c3e50)
+      - .text-muted: var(--text-muted-on-light) (#5a7a8a)
+   
+   3. Variabel warna di :root memudahkan perubahan tema global
+   4. Cukup edit 4 variabel utama untuk mengubah seluruh skema teks:
+      - --text-on-light
+      - --text-muted-on-light  
+      - --text-on-dark
+      - --text-muted-on-dark
+*/
+
+/* Animations & Utility classes (tidak berubah) */
+@keyframes softFloat {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
 }
 
-.floating-character.bubble-active {
-    animation: floatSlow 3s ease-in-out infinite;
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(127, 180, 204, 0.2);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+        135deg,
+        var(--coral-pastel) 0%,
+        var(--yellow-pastel) 100%
+    );
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--coral-pastel);
+}
+
+/* Input Date Custom */
+input[type="date"] {
+    position: relative;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background: var(--coral-pastel);
+    border-radius: 50px;
+    padding: 4px;
+    cursor: pointer;
+    opacity: 0.7;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
+    .card-body {
+        padding: 20px;
+    }
+
+    .table-responsive {
+        border-radius: 20px;
+    }
+
+    .btn {
+        padding: 6px 18px;
+        font-size: 0.8rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
     .floating-character img {
         width: 60px;
         height: 60px;
@@ -874,7 +989,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     z-index: 1030;
 }
 
-/* Optional: Tambahkan efek shadow saat discroll */
 .navbar.sticky-top.scrolled {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }

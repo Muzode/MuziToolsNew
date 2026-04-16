@@ -14,6 +14,8 @@ use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AdminLogsController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\AIChatController;
 
 // Login & Logout (Semua Role)
 Route::get('/', function () {
@@ -55,9 +57,17 @@ Route::middleware(['auth', 'role:petugas'])->group(function () {
 Route::middleware(['auth', 'role:peminjam'])->group(function () {
     Route::get('/peminjam/dashboard', [PeminjamController::class, 'index']); // Daftar Alat
     Route::post('/peminjam/ajukan', [PeminjamController::class, 'store']); // Mengajukan
-    Route::get('/peminjam/riwayat', [PeminjamController::class, 'history']); // Riwayat & Kembalikan
+    Route::get('/peminjam/riwayat', [PeminjamController::class, 'history'])->name('peminjam.riwayat'); // Riwayat & Kembalikan
     // Route baru untuk ajukan pengembalian
     Route::patch('/request-return/{id}', [PeminjamController::class, 'requestReturn'])->name('peminjam.request-return');
+
+    Route::get('/payments/denda/{loan}', [PaymentController::class, 'showDendaPayment'])->name('payments.denda');
+    Route::post('/payments/create-transaction/{loan}', [PaymentController::class, 'createTransaction'])->name('payments.create-transaction');
+    Route::get('/payments/check/{orderId}', [PaymentController::class, 'checkStatus'])->name('payments.check');
+    Route::get('/payments/finish', [PaymentController::class, 'finish'])->name('payments.finish');
+    // routes/web.php - Tambahkan di dalam group auth
+    Route::post('/payments/cancel/{orderId}', [PaymentController::class, 'cancelPayment'])->name('payments.cancel');
+    Route::post('/payments/manual-update', [PaymentController::class, 'manualUpdate'])->name('payments.manual-update');
 });
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
@@ -65,3 +75,9 @@ Route::post('/register', [RegisterController::class, 'store'])->name('register.s
 Route::post('/petugas/return/{id}', [PetugasController::class, 'processReturn'])->name('petugas.return');
 Route::post('/admin/returns', [AdminReturnController::class, 'store'])
     ->name('admin.returns.store');
+
+// Webhook untuk Midtrans (tanpa auth)
+Route::post('/payments/manual-update', [PaymentController::class, 'manualUpdate'])->name('payments.manual-update');
+
+// routes/web.php
+Route::post('/ai-chat', [AIChatController::class, 'chat'])->name('ai.chat')->middleware('auth');
